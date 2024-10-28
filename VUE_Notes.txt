@@ -473,6 +473,146 @@ index.html
 
 </html>
 
+.....................................................................................
+.....................................................................................
+DOM Programming:
+1.create element or elements 
+   When we create elements we create tree model-DOM tree
+2.update existing elements content
+3.remove/delete existing element content and element itself
+4.list/walk through tree
+5.we may change style dynamically
+6.we interact with ui and change the ui.
+
+
+Vue is javascript dom programming framework 
+
+There are two ways of programming in UI:
+
+1.imperative programming
+    The way of write program using complex logics, more boiler plate code.
+eg:
+  create element using plain js
+  create element using jQuery
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue-Application</title>
+    <!-- <script src="https://unpkg.com/vue@3"></script> -->
+    <script src="https://unpkg.com/vue@3.1.1/dist/vue.global.prod.js"></script>
+</head>
+<body>
+     <h1>Vue SSA </h1>
+     <div id="root">
+         
+     </div>
+     <!-- Plain js to create dom element -->
+     <script>
+        function createElement(){
+            console.log('element creation')
+            const Heading = document.createElement('h1')
+            Heading.innerHTML = 'Hello DOM!'
+            document.getElementById('root').appendChild(Heading)
+        }
+        createElement()
+     </script>
+</body>
+</html>
+
+
+Vue is javascript dom programming framework 
+
+There are two ways of programming in UI:
+
+1.imperative programming
+    The way of write program using complex logics, more boiler plate code.
+eg:
+  create element using plain js
+  create element using jQuery
+
+   <div id="root">
+
+    </div>
+    <script>
+        function createElement() {
+            console.log('create Element')
+            const Heading = document.createElement('h1')
+            Heading.innerHTML = 'Hello DOM!'
+            Heading.style.color = 'blue'
+            document.getElementById('root').appendChild(Heading)
+        }
+        createElement();
+    </script>
+
+2.declarative programming
+
+ =>write less code
+ =>Abstract DOM apis with readable constructs 
+ =>introduce declarative templates
+
+Note:
+ Template driven technology introduced in server side computing in 1990's
+ 2006, the first template driven technology was introduced in javascript called
+ mustache.js ( {{}}})
+ Template = static + dynamic  content , where dynamic content is interpolated into code. 
+ eg <h1>Hello {{name}} </h1>
+
+ "Vue is based on declarative , which extends standard HTML with a template syntax"
+				+
+			 java script => binds the state(data)
+
+...................................................................................
+...................................................................................
+How Vue represents UI?
+
+=>Vue creates UI dynamically(DOM)
+=>Vue Organizes the UI into Smaller and Smaller UI
+=>Vue Breaks complex UI into Smaller UI
+   This model is called Composition
+
+Why Composition?
+=>The UI can be reused any where in the app.
+=>The code maintaince is very easy,because it is independant.
+
+           This arch is called as "component driven arch"
+
+.....................................................................................
+		  Vue js and DOM element creation
+....................................................................................
+
+in order to begin with vue, we need to understand some of the vue.js objects.
+
+Vue offers lot of objects.
+
+Vue has two major versions
+
+1.vue 2.x - old and legacy version
+2.vue 3.x - modern and latest version
+
+	 There is lot of difference in vue 2 and vu3
+      We are going to discuss  both versions by comparsion.	
+
+
+1.Application Object/Vue instance
+
+Pro Vue 3. (in vue 2.x)
+var app = new Vue({   })
+
+
+Vue 3:
+1.1.Get Vue Instance
+
+We can get Vue Instance 
+
+A.Via Global Vue variable
+B.Via ES 6 modules
+
+
+
+
 
 
 

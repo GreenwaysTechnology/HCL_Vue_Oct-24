@@ -9,5 +9,18 @@
 </head>
 <body>
      <h1>Vue SSA </h1>
+     <div id="root">
+         
+     </div>
+     <!-- Plain js to create dom element -->
+     <script>
+        function createElement(){
+            console.log('element creation')
+            const Heading = document.createElement('h1')
+            Heading.innerHTML = 'Hello DOM!'
+            document.getElementById('root').appendChild(Heading)
+        }
+        createElement()
+     </script>
 </body>
 </html>
