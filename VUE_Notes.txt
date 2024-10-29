@@ -610,9 +610,255 @@ We can get Vue Instance
 A.Via Global Vue variable
 B.Via ES 6 modules
 
+.....................................................................................
+			  A.Via Global Vue Instance variable	
 
 
+How to get Vue instance?
+ First we have to get Vue instance then only we can create application.
 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue</title>
+    <script src="https://unpkg.com/vue@3.1.1/dist/vue.global.prod.js"></script>
+
+</head>
+
+<body>
+    <h1>Vue js Application</h1>
+    <script>
+        //Vue is global variable provided by Framework
+        let vue = Vue
+        console.log(vue)
+    </script>
+</body>
+
+</html>
+Vue instance is having so many methods(apis)
+............................................
+
+createApp: (...args) => {…}
+createBlock: ƒ createBlock(type, props, children, patchFlag, dynamicProps)
+createCommentVNode: ƒ createCommentVNode(text = '', // when used as the v-else branch, the comment node must be created as a // block to ensure correct updates. asBlock = false)
+createElementBlock: ƒ createElementBlock(type, props, children, patchFlag, 
+
+What is Application Object?
+
+  Application object is object which is container object which encapsulate vue app.
+
+How to create Application Object?
+
+ in order to create application object, we need to get vue instance first.
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue</title>
+    <script src="https://unpkg.com/vue@3.1.1/dist/vue.global.prod.js"></script>
+
+</head>
+
+<body>
+    <h1>Vue js Application</h1>
+    <script>
+        //Vue is global variable provided by Framework
+        let vue = Vue
+        //create application
+        const app = vue.createApp()
+        console.log(app.version)
+    </script>
+</body>
+
+</html>
+.....................................................................................
+			.....................................................................................
+			B.Via ES 6 Modules
+.....................................................................................
+
+ES 6 module:
+  import , export ,export default.
+
+
+Can we use es6 modules directly inside browser?
+
+No, in old browsers
+
+Yes in modern browsers
+
+Generallly browser has no facility to links files and share code using E6 modules keyword.
+
+How to run es 6 modules based apps inside browsers
+
+1.via build tools.
+  webpack,roolup....
+
+2.without build tool
+   using browser only
+   using script tag
+
+How to write es6 modules and run?
+
+Using script Tag:
+................
+eg
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="src/index.js" type="module"></script>
+</body>
+</html>
+
+src/index.js
+import { name } from "./name.js";
+
+console.log(name)
+
+src/name.js
+
+export const name='Subramanian'
+.....................................................................................
+	 ES 6 modules and html 
+....................................................................................
+
+in the last example we have used import and export  keywords inside js
+
+Inside html we have used js via <script src="src/index.js" type="module"> 
+
+Can we import js inside html directly?
+
+Yes! we can
+
+if you want to import any js code within html file, we have to use there is option called "importmap" option.
+Syntax:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="importmap">
+        {
+            "imports":{
+                
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- <script src="src/index.js" type="module"></script> -->
+</body>
+</html>
+
+
+eg:
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue</title>
+    <script type="importmap">
+        {
+            "imports": {
+                "name" : "./src/name.js"
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <script type="module">
+        import { name } from "name"
+        console.log(name)
+    </script>
+</body>
+
+</html>
+
+Note:
+Import Maps Browser Support
+
+Import maps are supported by default in Chromium-based browsers, so we recommend using Chrome or Edge during the learning process.
+
+If using Firefox, it is only supported in version 102+ and currently needs to be enabled via the dom.importMaps.enabled option in about:config.
+
+If your preferred browser does not support import maps yet, you can polyfill it with es-module-shims.
+
+
+Eg with polyfil:
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue</title>
+    <script async src="https://ga.jspm.io/npm:es-module-shims@1.5.5/dist/es-module-shims.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "name" : "./src/name.js"
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <script type="module">
+        import { name } from "name"
+        console.log(name)
+    </script>
+</body>
+
+</html>
+....................................................................................
+			  Vuejs framework and es 6 module syntax
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue</title>
+    <script async src="https://ga.jspm.io/npm:es-module-shims@1.5.5/dist/es-module-shims.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "name" : "./src/name.js",
+                "vue" : "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <script type="module">
+        import { name } from "name"
+        import { createApp } from 'vue'
+        console.log(name)
+        const app = createApp()
+        console.log(app)
+
+    </script>
+</body>
+
+</html>
+.....................................................................................
 
 
 

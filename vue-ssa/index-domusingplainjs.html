@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue-Application</title>
+    <!-- <script src="https://unpkg.com/vue@3"></script> -->
+    <script src="https://unpkg.com/vue@3.1.1/dist/vue.global.prod.js"></script>
+</head>
+<body>
+     <h1>Vue SSA </h1>
+     <div id="root">
+         
+     </div>
+     <!-- Plain js to create dom element -->
+     <script>
+        function createElement(){
+            console.log('element creation')
+            const Heading = document.createElement('h1')
+            Heading.innerHTML = 'Hello DOM!'
+            document.getElementById('root').appendChild(Heading)
+        }
+        createElement()
+     </script>
+</body>
+</html>
