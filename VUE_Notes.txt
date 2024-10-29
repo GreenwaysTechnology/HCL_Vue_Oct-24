@@ -859,6 +859,531 @@ Eg with polyfil:
 
 </html>
 .....................................................................................
+			  DOM ELEMENT Creation Using vue
+			   (User interface development)
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue</title>
+    <script async src="https://ga.jspm.io/npm:es-module-shims@1.5.5/dist/es-module-shims.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "vue" : "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="root">
+	
+    </div>
+    <script type="module">
+        import { createApp } from 'vue'
+        const app = createApp({
+            template:`
+                <h1>Hello,Vue</h1>            
+            `
+        })
+        //insert dom into div
+        app.mount('#root')
+    </script>
+</body>
+
+</html>
+.....................................................................................
+.....................................................................................
+			  User interface Development
+.....................................................................................
+
+User interface development guidelines:
+
+1.User interface must be broken into smallar and smallar -  Compostion - Component model
+
+2.User interface is organized in hierachal structure -  Tree Structure 
+  Thats where html has been designed.
+ We need to follow html tree model
+
+ <div>
+    <div>
+	<div>
+	   
+	</div>
+	
+    </div>
+ </div>
+
+3.In tree model there must be one root element
+..................................................................................
+			
+			Root Component(root Element)
+
+
+Component Representations:
+
+In React:
+function Logo(){
+   
+   return <img src="logo.png"/>
+ 
+}
+In Angular
+
+ @Component({
+   selector:'app-logo'
+   template:`<img src="logo.png"/>
+ }) 
+ export class Logo{
+
+ }
+....................................................................................
+In Vue:
+ Component is literal object.
+
+const Logo = { 
+
+}
+
+Here Logo is component name, {} is object which contains component configurations.
+
+Component configuration is divided into various segments/category
+
+
+1.UI/Rendering - HTML,CSS(Markup)
+..................................
+ template
+ render
+ compilerOptions
+
+2.State -(data) - javascript
+ data 
+ props
+ computed
+ methods
+ watch
+ emits
+ expose
+
+3.Life Cycle hooks(methods)
+ beforeCreate
+ created
+ beforeMount
+ mounted
+ beforeUpdate
+ updated
+ beforeUnmount
+ unmounted
+ errorCaptured
+ renderTracked
+ renderTriggered
+ activated
+ deactivated
+ serverPrefetch
+
+4.Composition
+ provide
+ inject
+ mixins
+ extends
+
+
+5.Misc
+ name
+ inheritAttrs
+ components
+ directives
+
+Component Instance apis and properties:
+.......................................
+ Theses are used inside code , not as config.
+ Most of the inbuilt properties and methods are refered by using "$"
+
+ $data
+ $props
+ $el
+ $options
+ $parent
+ $root
+ $slots
+ $refs
+ $attrs
+ $watch()
+ $emit()
+ $forceUpdate()
+ $nextTick()
+
+For eg:
+
+const Logo = {
+ ui:{},
+ state: {},
+ methods:{},
+ others:{}
+}
+.....................................................................................
+			 Vue Application Setup using build tools
+.....................................................................................
+Build tools are js based tools for create,manage js apps work flows.
+Build tools based on npm tool.
+
+Setup Vue Project using build tool based: CLI based apporach.
+.............................................................
+
+There are two cli tools
+
+1.Vue-cli
+  https://cli.vuejs.org/#getting-started
+Vue- cli is now in maintance mode, meaning that , which is only used for creating old vue project(v2)
+
+2.Vite
+https://vitejs.dev/guide/
+Next Generation Frontend Tooling project, used to create no of project types.
+
+We are going to follow Vite base project setup
+
+npm init vue@latest
+
+This is abstraction for vite based project templates
+
+
+
+>npm init vue@latest
+
+vue-cli
+ old pattern
+vite
+ modern pattern - recommended
+ npm init vue@latest
+
+This is abstraction for vite based project templates
+ 
+G:\HCL>npm init vue@latest
+Need to install the following packages:
+create-vue@3.11.2
+Ok to proceed? (y) y
+
+
+> npx
+> create-vue
+
+
+Vue.js - The Progressive JavaScript Framework
+
+√ Project name: ... vue-app
+√ Add TypeScript? ... No / Yes
+√ Add JSX Support? ... No / Yes
+√ Add Vue Router for Single Page Application development? ... No / Yes
+√ Add Pinia for state management? ... No / Yes
+√ Add Vitest for Unit Testing? ... No / Yes
+√ Add an End-to-End Testing Solution? » No
+√ Add ESLint for code quality? ... No / Yes
+√ Add Vue DevTools 7 extension for debugging? (experimental) ... No / Yes
+
+Scaffolding project in G:\HCL\vue-app...
+
+Done. Now run:
+
+  cd vue-app
+  npm install
+  npm run dev
+
+Vue.js - The Progressive JavaScript Framework
+
+√ Project name: ... vue-app
+√ Add TypeScript? ... No / Yes
+√ Add JSX Support? ... No / Yes
+√ Add Vue Router for Single Page Application development? ... No / Yes
+√ Add Pinia for state management? ... No / Yes
+√ Add Vitest for Unit Testing? ... No / Yes
+√ Add an End-to-End Testing Solution? » No
+√ Add ESLint for code quality? ... No / Yes
+√ Add Vue DevTools 7 extension for debugging? (experimental) ... No / Yes
+
+Scaffolding project in G:\IBM\2024\Aug\vuejs\vue-app...
+
+Done. Now run:
+
+  cd vue-app
+  npm install
+  npm run dev
+
+
+G:\IBM\2024\Aug\vuejs>cd vue-app
+
+G:\IBM\2024\Aug\vuejs/vue-app>npm i
+
+G:\IBM\2024\Aug\vuejs/vue-app>npm run dev
+
+
+Project Structure:
+
+package.json
+{
+  "name": "vue-app",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.4.29"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.5",
+    "vite": "^5.3.1",
+    "vite-plugin-vue-devtools": "^7.3.1"
+  }
+}
+....
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vite App</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
+
+vite-config.js
+import { fileURLToPath, URL } from 'node:url'
+
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import vueDevTools from 'vite-plugin-vue-devtools'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [
+    vue(),
+    vueDevTools(),
+  ],
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url))
+    }
+  }
+})
+
+src - source folder
+  |
+  assets -  folder where we keep global css and image fiels
+  components -  where we can keeps components of app
+  App.vue
+  main.js -  always must be .js file- entry
+
+App.vue
+  All Components must be saved "ComponentName.vue"
+App Root Component for the application
+
+main.js 
+import './assets/main.css'
+
+import { createApp } from 'vue'
+import App from './App.vue'
+
+createApp(App).mount('#app')
+....................................................................................
+			Vue Coding style
+..................................................................................
+
+Vue coding can be classified into two category.
+
+Vue 2.x and Vue 3.x
+
+API Classification:
+..................
+
+1.Options API based style -Vue 2.x and Vue 3.x
+2.Composition API Based style -  Vue 3.x
+...................................................................................
+		Components and Components Creational patterns
+...................................................................................
+
+1.Plain javascript pattern
+
+App.js
+export default {
+
+}
+
+It is more imperative way of creating components
+
+2.Single File Component pattern- SFC Pattern
+
+ It is more declarative way of creating components
+ 
+As name suggests, All component logic inside single file
+
+Every Component have three major segement
+
+1.template
+   Collection of html elements and vue instructions
+
+2.javascript
+   collection of variables,methods/functions
+
+3.style
+  css style for a component.
+
+In Single File Component, we isloate very clearly into three sections
+
+<script>
+ // all js code 
+</script>
+<template>
+  template code - html code
+</template>
+<style>
+ css style for component
+</style>
+		.....................................................................................
+	      Plain javascript is usefull where there is no build workflow
+		     SFC is usefull where there is build work flow		   
+
+	      Plain javascript components are saved with "FileName.js" extension
+	       SFC Components are saved with "FileName.vue" extension
+
+
+	       Plain javascript pattern is used for "SSA" application 
+                SFC Component pattern is used for "SPA" application
+...................................................................................
+
+Plain javascript pattern and SSA application:
+..............................................
+
+src/components/App.js
+
+//component must be exported using export default
+
+export default {
+    template:`
+        <h1>Vue Component</h1>
+    `
+    //rest of the options goes here
+}
+index.html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script async src="https://ga.jspm.io/npm:es-module-shims@1.5.5/dist/es-module-shims.js"></script>
+    <script type="importmap">
+        {
+            "imports":{
+                "vue":"https://unpkg.com/vue@3/dist/vue.esm-browser.js",
+                "app":"./src/components/App.js"
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div id="root">
+
+    </div>
+    <script type="module">
+        import { createApp } from 'vue'
+        import App from 'app'
+        //inject root component
+        const app = createApp(App)
+        app.mount("#root")
+    </script>
+</body>
+
+</html>
+.....................................................................................
+				Component  Composition and SSA 
+.....................................................................................
+
+
+App -Root Component
+ |
+ Welcome- Component
+
+eg:
+
+src/components/Welcome.js
+export default {
+    template:`
+        <h1>Hello Vue!!!</h1>
+    `
+}
+src/components/App.js
+import Welcome from "./Welcome.js";
+
+export default {
+    components: {
+        Welcome
+    },
+    template:`
+       <Welcome></Welcome>
+    `
+}
+
+index.html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue</title>
+    <script async src="https://ga.jspm.io/npm:es-module-shims@1.5.5/dist/es-module-shims.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "vue" : "https://unpkg.com/vue@3/dist/vue.esm-browser.js",
+                "app" : "./src/compoents/App.js"
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="root">
+
+    </div>
+    <script type="module">
+        import { createApp } from 'vue'
+        import App from 'app'
+        const app = createApp(App)
+        //insert dom into div
+        app.mount('#root')
+    </script>
+</body>
+
+</html>
+
+Task:
+
+ Create UI Which represents Header
+
+ App
+  |
+  Header
+    |
+    Logo
+    Search Panel
+
+
+
+
+
 
 
 

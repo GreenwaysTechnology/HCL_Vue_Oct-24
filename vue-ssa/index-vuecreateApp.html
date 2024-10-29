@@ -9,22 +9,21 @@
     <script type="importmap">
         {
             "imports": {
-                "vue" : "https://unpkg.com/vue@3/dist/vue.esm-browser.js",
-                "app" : "./src/compoents/App.js"
+                "name" : "./src/name.js",
+                "vue" : "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
             }
         }
     </script>
 </head>
-<body>
-    <div id="root">
 
-    </div>
+<body>
     <script type="module">
+        import { name } from "name"
         import { createApp } from 'vue'
-        import App from 'app'
-        const app = createApp(App)
-        //insert dom into div
-        app.mount('#root')
+        console.log(name)
+        const app = createApp()
+        console.log(app)
+
     </script>
 </body>
 
