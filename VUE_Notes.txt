@@ -1380,11 +1380,250 @@ Task:
     Logo
     Search Panel
 
+.....................................................................................
+.....................................................................................			             SFC Pattern
+.....................................................................................
+
+SFC pattern file, contains three segments.
+
+
+1.template
+   Collection of html elements and vue instructions
+
+2.javascript
+   colllection of variables,methods/functions
+
+3.style
+  css style for a component.
+
+In SFC pattern, we isloate very clearly into three sections
+
+SFC files are saved with ".vue" extension.
+
+
+<script>
+ // all js code 
+</script>
+<template>
+  template code - html code
+</template>
+<style>
+ css style for component
+</style>
+
+<script>
+ 
+src/App.vue
+</script>
+<template>
+  <div>
+     <h1>Hello Vue</h1>
+  </div>
+</template>
+<style>
+</style>
+...................................................................................
+			 "Going foward we focus only  SFC pattern "
+....................................................................................
+
+Inside SFC , we have two style of writing code
+
+ 1.Options Api -  pure vue 2.x style
+ 2.Composition Api - pure vue 3.x style
+
+ Note;
+  Options Api can be written inside vue.2 and vue.3
+
+Commonality between both patterns
+			 (Options API and Composition API)
+
+1.Code segmentation is same for both patterns
+
+<script>
+ // all js code 
+</script>
+<template>
+  template code - html code
+</template>
+<style>
+ css style for component
+</style>
+
+.....................................................................................
+			Options API pattern
+.....................................................................................
+
+In Options API pattern we return Object called "Option" Object,  which contains necessary configuration.
+
+<script>
+//here {} is options Object
+export default {
+   //all configuration will go
+}
+</script>
+
+Sample Configuration(Options)
+
+<script>
+ export default {
+   components:[],
+   props:['something']
+   data() {
+     return {}
+   }
+ }
+</script>
+
+.....................................................................................
+			Composition API Pattern
+.....................................................................................
+
+=>It is vue 3.x style of writing code.
+=>In this pattern, we define a component logic's using imported api functions
+=>In this pattern, we can write js directly within script tag.
+=>In composition pattern we have two style of coding.
+
+
+		      Composition API pattern
+				|
+	------------------------------------------------------------
+        |                                                          |
+   with setup function                                     with setup attribute
+
+
+with setup function:
+
+1.It looks like Options api pattern but code refactoring has been done.
+2.It looks like imperative style of compostion api.
+
+<script>
+// compostion api pattern;using setup function
+export default {
+    setup() {
+        //all js initalization code will go
+    }
+}
+</script>
+<template>
+    <h1>Compostion API pattern using setup function</h1>
+</template>
+<style></style>
+
+with setup attribute:
+.....................
+=>It is same as setup function only but it is more declarative.
+=>It has been built on the top of setup function...
+=>We dont need to write extra code, vue compiler will write for us.
+
+<script setup>
+ //js code will go here
+</script>
+<template>
+    <h1>Compostion API pattern using setup function</h1>
+</template>
+<style></style>
+
+				     Vue App
+		   			|
+			---------------------------------------  
+			With Build tool                  Without build tool
+				 |				|
+			  SFC Component            	 Standalone script App
+				|
+	----------------------------------------------------------------
+        |                                                             |
+        |                                                             |
+
+      Options Api                                              Composition Api
+	 |                                                          |
+   Vue 2 based apps                                           Vue 3 based apps
+							        												|	
+		  							|
+				----------------------------------------------------
+				|                                     	|
+	      	with setup function                           with setup attribute
 
 
 
+Options API:
+<!-- Options API pattern -->
+ <script>
+ export default {
+
+ }
+</script>
+<template>
+    <h1>Vue with Options Api</h1>
+</template>
+
+Composition API: With Setup function
+....................................
+
+<!-- Composition API pattern:with setup function -->
+<script>
+export default {
+   //add setup fun
+   setup(){
+      //here all js code will go
+   }
+}
+</script>
+<template>
+   <h1>Vue with Composition API: With Setup function</h1>
+</template>
+
+Composition API : With setup attribute.
+<!-- Composition API pattern:with setup attribute -->
+<script setup>
+//  all js code will go here
+</script>
+<template>
+   <h1>Vue with Compostion  Api -setup attribute</h1>
+</template>
+			.....................................................................................
+			SFC- Options API
+.....................................................................................
+
+1.Component Composition:
+
+src/components/Hello.vue
+<script>
+export default {
+
+}
+</script>
+<template>
+    <h1>Hello</h1>
+</template>
+
+src/App.vue
+<script>
+import Hello from './components/Hello.vue'
+
+export default {
+components:{
+    Hello
+ }
+}
+</script>
+<template>
+  <Hello></Hello>   
+</template>
 
 
+More Components:
+<script>
+import Hello from './components/Hello.vue'
+import Hai from './components/Hai.vue'
 
-
-
+export default {
+components:{
+    Hello,
+    Hai
+ }
+}
+</script>
+<template>
+  <Hello></Hello>
+  <Hai></Hai>   
+</template>
