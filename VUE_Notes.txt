@@ -2276,6 +2276,85 @@ import User from './components/User.vue';
 <template>
     <User></User>
 </template>
+.....................................................................................				 Directives
+...................................................................................
+What is Directive?
+    Directive is object which helps to create custom elements and attributes.
+    Directives enchances existing html elements- we can extend the basic functionality of HTML elements
+   We are going to add new behaviour to the HTML elements.
+ 
+Custom Elements and attributes:
+..............................
+<h1>Hello</h1>
+  h1 is built in html element, it is part of the language.
+
+Html Runtime:
+ when html runtime encounters h1 element, it knows how to represent.
+
+<hello>
+<profile>
+<address>
+    
+  These looks like html elements but not.
+   Html runtime when encounters these elements, internally it throws Runtime Error.
+  called "UnKnowElementException".
+
+if "UnKnowElementException" is thrown , browser automatically converts it into "PlainText" Node, renders it.
+
+In 2007,w3c introduced new feature called "Custom element feature", According to custom element, we can introduce custom element.
+
+How to teach browser to understand custom element?
+  via "js"
+
+There is api customElements.define('popup-info',PoupInfo);
+
+
+Custom attributes:
+..................
+   
+ Similar to custom elements, we can create custom attributes through which we can add new behaviour to existing elements
+ 
+ <div style>
+       |
+     attribute - built in
+
+<div my-if>
+      |  
+     attribute -  custom
+
+In Frameworks like angular,vue, we have feature called directives
+
+		 "Every component is directive/custom element"
+
+<app-drawer>
+<profile>
+			 Directives
+	-----------------------------------------------------------
+	|                                                      |
+    Custom Element                                      Custom Attribute
+    (Component)                                        (Attribute Directive)
+
+
+....................................................................................
+			     Attribute Directives
+....................................................................................
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
 
 
 
