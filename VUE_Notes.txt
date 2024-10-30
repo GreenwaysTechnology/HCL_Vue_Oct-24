@@ -1627,3 +1627,124 @@ components:{
   <Hello></Hello>
   <Hai></Hai>   
 </template>
+.....................................................................................
+			SFC- Composition API Using setup function
+.....................................................................................
+
+1.Component Composition:
+src/components/Product.vue
+<!-- Using Composition api -setup function -->
+<script>
+export default {
+    setup(){
+
+    }
+}
+</script>
+<template>
+    <h1>Product</h1>
+</template>
+
+2.src/components/App.vue
+<script>
+import Product from './components/Product.vue';
+export default {
+    components: {
+        Product
+    },
+    setup(){
+
+    }
+}
+</script>
+<template>
+    <h1>Home</h1>
+    <Product></Product>
+</template>
+
+.....................................................................................
+			SFC- Composition API Using setup Attribute
+.....................................................................................
+src/components/Item.vue
+<script setup>
+
+</script>
+<template>
+  <h2>Item Component</h2>
+</template>
+
+src/App.vue
+<script setup>
+import Item from './components/Item.vue';
+
+</script>
+<template>
+ <Item></Item>
+</template>
+.....................................................................................
+			Can we mix patterns across the components
+.....................................................................................
+
+Yes!, you can but mostly recommened to follow single pattern to make code consistency.
+
+eg:
+
+Options Api:
+src/components/Hello.vue
+<script>
+export default {
+
+}
+</script>
+<template>
+    <h1>Hello</h1>
+</template>
+
+Compostion Api with setup attribute
+<script setup>
+import Hello from './components/Hello.vue';
+</script>
+<template>
+   <Hello></Hello>
+</template>
+
+Task:
+ Building site layout using component composition.
+
+Page -Root Component
+  |
+  Header
+    |
+    Search Bar
+    Logo
+  Footer
+    |
+    contact us 
+    Services
+  Body
+    |
+    section 1 - some information
+    Section 2 - some information
+    Section 3 - some information
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,15 +1,6 @@
-<script>
-import Hello from './components/Hello.vue'
-import Hai from './components/Hai.vue'
-
-export default {
-components:{
-    Hello,
-    Hai
- }
-}
+<script setup>
+import Hello from './components/Hello.vue';
 </script>
 <template>
-  <Hello></Hello>
-  <Hai></Hai>   
+   <Hello></Hello>
 </template>
