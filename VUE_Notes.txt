@@ -1889,8 +1889,7 @@ Note:
 =>Global registration makes dependency relationships less explicit in large applications. 
 
 =>It makes it difficult to locate a child component's implementation from a parent component using it.
-		....................................................................................
-....................................................................................
+	....................................................................................
 			 Component Naming Conventions
 .....................................................................................
 
@@ -1922,3 +1921,288 @@ eg:
    <status-bar></status-bar>
 </template>
 <style></style>
+
+.....................................................................................
+				Templates
+....................................................................................
+
+Template is representation of "View"
+
+View is runtime representation of user interface
+View is Typically DOM tree.
+
+
+Types of templates:
+
+1.Static template
+   It is having only pure html tags
+
+2.Dynamic templates
+   Template is having html code and vue instructions ,and js code
+
+Vue instructions are special symbols and notations.
+
+Project:
+ npm init vue@latest
+
+
+Static Template:
+<script>
+export default {}
+</script>
+<template>
+  <div>
+     <header>
+       <h2>Blog</h2>
+     </header>
+     <div>
+        <section>
+           <p>This is Vue js</p>
+        </section>
+        <section>
+          <p>This is Html </p>
+       </section>
+       <section>
+        <p>This is C# </p>
+     </section>
+     </div>
+     <footer>
+      <p>This is footer</p>
+     </footer>
+  </div>
+</template>
+....................................................................................
+			 Dynamic templates
+....................................................................................
+
+Dynamic templates includes "vue instructions,js,html"
+
+Vue instructions are other wise called as "Data binding"
+
+Data binding:
+  Passing data from the component to View and View Component.
+
+User interface is broken down into two sections:
+
+1.Design - UI Markup
+
+2.Logic  - Javascript 
+
+Any User interface development follows some design pattern.
+
+Popular design patterns for ui developement
+
+1.MVC - Model View Controller
+   Angular,Spring MVC,.Net MVC
+2.Flux 
+   React
+3.MVVM - Model View - View Model
+  Knockout.js
+  ember.js
+
+Vue.js follows MVC Design pattern and also Flux Design pattern -Hybrid design pattern.
+
+Mostly Vue.js  follows MVC.
+
+According MVC
+
+1.Template section is called View
+2.script section is Called Model and Controller
+
+<script>
+  model and controller code
+</script>
+<template>
+  view
+</template>
+
+ data binding is nothing but moving data between script to template and template to script.
+
+We have different types of data binding.
+
+1.Interpolation
+2.Property and props Binding
+3.Attribute Binding
+4.Event Binding
+5.Two way data binding
+6.Class and Style binding
+
+Component =  {Model + Controller + View }
+.....................................................................................
+			Interpolation
+.....................................................................................
+
+Transfering data (state) from Controller to view.
+
+State:
+  State can be represented in 2 ways.
+
+1.Primitives
+   numbers,strings,booleans
+2.Objects and Collections
+   Literal objects and arrays
+.....................................................................................
+			Interpolation -SFC -Options API pattern
+.....................................................................................
+
+Data configuration:
+
+let options = {
+data:?
+props: ?
+methods: ?
+}
+syntax:
+
+export default {
+  data(){
+     must return object -state
+     return {}
+  }
+}
+
+How to bind /show the variable inside view?
+ {{Variable}} - interpolation
+
+
+src/App.vue
+<script>
+export default {
+    data() {
+        //return state
+        return {
+            name: 'Subramanian Murugan'
+        }
+    }
+}
+</script>
+<template>
+    <h1>Profile</h1>
+    <div>
+        <h3>Name :{{ name }}</h3>
+    </div>
+</template>
+
+More data:
+ numbers
+ booleans
+ objects
+
+<script>
+export default {
+    data() {
+        //return state
+        return {
+            name: 'Subramanian Murugan',
+            status: true,
+            age: 18,
+            address: {
+                city: 'Coimbatore',
+                state: 'Tamil Nadu',
+                zipcode: '611111'
+            }
+        }
+    }
+}
+</script>
+<template>
+    <h1>Profile</h1>
+    <div>
+        <h3>Name :{{ name }}</h3>
+        <h3>Age : {{ age }}</h3>
+        <h3>Status : {{ status ? 'Available' : 'Not Available' }}</h3>
+        <address>
+            <p>{{ address.city }}</p>
+            <p>{{ address.state }}</p>
+            <p>{{ address.zipcode }}</p>
+        </address>
+    </div>
+</template>
+
+
+Create separate Component
+
+src/components/Profile.vue
+<script>
+export default {
+    data() {
+        //return state
+        return {
+            name: 'Subramanian Murugan',
+            status: true,
+            age: 18,
+            address: {
+                city: 'Coimbatore',
+                state: 'Tamil Nadu',
+                zipcode: '611111'
+            }
+        }
+    }
+}
+</script>
+<template>
+    <h1>Profile</h1>
+    <div>
+        <h3>Name :{{ name }}</h3>
+        <h3>Age : {{ age }}</h3>
+        <h3>Status : {{ status ? 'Available' : 'Not Available' }}</h3>
+        <address>
+            <p>{{ address.city }}</p>
+            <p>{{ address.state }}</p>
+            <p>{{ address.zipcode }}</p>
+        </address>
+    </div>
+</template>
+
+src/App.vue
+<script>
+import Profile from './components/Profile.vue'
+export default {
+  components: {
+    Profile
+  }
+}
+</script>
+<template>
+  <Profile></Profile>
+  <Profile></Profile>
+  <Profile></Profile>
+  <Profile></Profile>
+  <Profile></Profile>
+</template>
+
+Task:
+ Create simple Product Component which displays product informations
+ id,name,price,qty,description,stock
+
+.....................................................................................
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
