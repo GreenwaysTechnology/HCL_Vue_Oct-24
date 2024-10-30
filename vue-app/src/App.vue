@@ -1,6 +1,11 @@
-<script setup>
-import Hello from './components/Hello.vue';
+<script>
+export default {
+
+}
 </script>
 <template>
-   <Hello></Hello>
+    <!-- Pascal case -->
+     <StatusBar></StatusBar>
+     <!-- Keb case -->
+      <status-bar></status-bar>
 </template>

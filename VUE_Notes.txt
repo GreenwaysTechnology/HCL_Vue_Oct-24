@@ -1726,25 +1726,199 @@ Page -Root Component
     section 1 - some information
     Section 2 - some information
     Section 3 - some information
+ You can test with options api and composition api (setup fun and attribute)
+.....................................................................................
+		      Components -Registration -Advanced
+.....................................................................................
+
+A Vue Components needs to be "registered"  so that vue knows to locate its implementation when it is encountered in a template.
+
+export default {
+  components: { Hello}
+}
+
+<template>
+   <Hello/>
+</template>
 
 
+Types of Registration:
+
+1. Global Registration
+ if components are registried globally, those components are called as "Global"
+ Components
+
+2. Local Registration
+ if components are registried locally, those components are called as "Local"
+ Components
+eg:
+export default {
+  components: { Hello}
+}
+
+<template>
+   <Hello/>
+</template>
+
+1. Global Registration /Global Components.
+
+Application Object:
+..................
+ It is a container object which contains other objects (components...etc)
+
+How to create Application Object?
+
+ const app = createApp(RootComponent)
+
+Here "app" is just variable points application Object
+
+Application Object having lot of methods:
+
+1.app.component()
+2.app.use()
+3.app.directive()
+etc...
 
 
+Global Components:
+ Global comonents are created with application object
+
+import { createApp } from 'vue'
+import App from './App.vue'
+
+const app = createApp(App)
+
+app.component('my-component',{
+  //component config
+})
+or
+
+StatusBar.vue
+
+app.component(StatusBar)
+
+app.mount("#app")
+
+//Retrive the Registred Component
+const MyComponent = app.component('my-component',{
+  //component config
+})
 
 
+eg;
+
+src/components/StatusBar.vue
+<script setup></script>
+<template>
+    <h2>Status Bar</h1>
+</template>
+<style>
+</style>
+
+src/main.js
+// import './assets/main.css'
+
+import { createApp } from 'vue'
+import App from './App.vue'
+import StatusBar from './components/StatusBar.vue'
+
+const app = createApp(App)
+//Global Component
+app.component('StatusBar', StatusBar)
+
+app.mount("#app")
+
+//createApp(App).mount('#app')
 
 
+How to use Global Component?
+
+In Options Api:
+..............
+<script>
+// import StatusBar from './components/StatusBar.vue'
+export default {
+    // components: {
+    //     StatusBar
+    // }
+};
+</script>
+<template>
+  <StatusBar />
+</template>
+<style></style>
+
+Note:
+ import statement is not necessary for global components.
 
 
+In Composition Api:
+
+Using setup fun:
+<script>
+// import StatusBar from './components/StatusBar.vue'
+export default {
+  setup() {},
+};
+</script>
+<template>
+  <StatusBar />
+</template>
+<style></style>
+
+Using setup attribute:
+<script setup>
+// import StatusBar from './components/StatusBar.vue'
+</script>
+<template>
+  <StatusBar />
+</template>
+<style></style>
 
 
+Note:
+ import statement is not necessary for global components.
+
+.....................................................................................
+			 Global Components vs Local Components
+.....................................................................................
+=>Global registration prevents build systems from removing unused components (a.k.a "tree-shaking").
+
+=>If you globally register a component but end up not using it anywhere in your app, it will still be included in the final bundle.
+
+=>Global registration makes dependency relationships less explicit in large applications. 
+
+=>It makes it difficult to locate a child component's implementation from a parent component using it.
+		....................................................................................
+....................................................................................
+			 Component Naming Conventions
+.....................................................................................
+
+PascalCase names are valid JavaScript identifiers. This makes it easier to import and register components in JavaScript. It also helps IDEs with auto-completion.
+
+<PascalCase /> makes it more obvious that this is a Vue component instead of a native HTML element in templates. It also differentiates Vue components from custom elements (web components).
+
+This is the recommended style when working with SFC or string templates. However, as discussed in DOM Template Parsing Caveats, PascalCase tags are not usable in DOM templates.
+
+The Component names can be kebab-case /dash case eg
+   <app-root>
+   <hello-world>
+   
+	Vue supports both cases , but highly recommened is Pascal Case
+
+=>This can affect long-term maintainability similar to using too many global variables.
+
+=>Global Components need to be imported inside any where
 
 
+eg:
 
-
-
-
-
-
-
-
+<script setup>
+</script>
+<template>
+    <!-- Pascal Case -->
+  <StatusBar />
+  <!-- keb-case -->
+   <status-bar></status-bar>
+</template>
+<style></style>
