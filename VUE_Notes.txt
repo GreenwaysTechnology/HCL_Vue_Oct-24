@@ -2519,14 +2519,194 @@ const isEnabled = false;
 </template>
 <style></style>
 .....................................................................................
+.....................................................................................
+			  Property binding- props binding
+....................................................................................
+
+Component contains 
+1.user interface
+2.data 
+
+if you create component which contains ui and data, after rendering if you want to supply different data for that component not possible.
+
+if i create profile component
+
+<script setup>
+import Address from "./Address.vue";
+let firstName = "Subramaian";
+let lastName = "Murugan";
+let status = true;
+</script>
+<template>
+  <div>
+    <h2>{{ firstName }} {{ lastName }}</h2>
+    <h2>{{ status ? "Available" : "Not Available" }}</h2>
+    <Address />
+  </div>
+</template>
+<style></style>
+
+here firstName,lastName ,status is "tightly coupled" with this component.
+
+what if i want to display different profile information,you cant reuse the component
+
+Solution:
+  You should create component that should be configurable.
+
+You have to pass different data to the component during runtime.
+
+How to configure the component which accepts data?
+
+  "Props or or property pattern.
+
+Props or property is way of passing data to the component.
+
+Props are passed from the parent component to child component.
+.....................................................................................
+	.....................................................................................
+			Props and Options api
+.....................................................................................
+
+Props Pattern
+
+Syntax:
+
+From the parent compoenent template
+
+<template>
+   <Child  title="value" :value="variable" />
+</template>
+
+  <Child  title="value" :value="variable" />
+	   |              |
+        props           props="variable"
+
+here title is property which value is static
+:value is also property which value is dynamic
 
 
+Parent: src/App.vue
+<script>
+import Profile from './components/Profile.vue'
+export default {
+  components: { Profile },
+  data() {
+    return {
+      firstName: 'Subramanian',
+      lastName: 'Murugan',
+      status: true
+    }
+  }
+}
+</script>
+<template>
+  <Profile title="Profile" :firstName="firstName" :lastName="lastName" :status="status"></Profile>
+  <Profile title="Profile" firstName="Ram" lastName="Samy" status="true"></Profile>
+  <Profile title="Profile" firstName="Karthik" lastName="Samy" status="true"></Profile>
+  <Profile title="Profile" firstName="John" lastName="Samy" status="true"></Profile>
+  <Profile title="Profile" firstName="Abhi" lastName="Samy" status="true"></Profile>
+
+</template>
+
+Child: src/components/Profile.vue
+<script>
+export default {
+    props: ['title', 'firstName', 'lastName', 'status']
+}
+</script>
+<template>
+    <div>
+        <h1>Profile Info </h1>
+        <h2>{{ firstName }} {{ lastName }}</h2>
+        <h2>{{ status ? "Available" : "Not Available" }}</h2>
+    </div>
+</template>
+....................................................................................
+			 Props and setup function
 
 
+Parent: src/App.vue
+<script>
+import Profile from './components/Profile.vue'
+export default {
+    components: { Profile },
+    setup() {
+        const firstName = 'Subramanian'
+        const lastName = 'Murugan'
+        const status = true
+        return {
+            firstName,
+            lastName,
+            status
+        }
+    }
+}
+</script>
+<template>
+    <Profile title="Profile" :firstName="firstName" :lastName="lastName" :status="status"></Profile>
+    <Profile title="Profile" firstName="Ram" lastName="Samy" status="true"></Profile>
+    <Profile title="Profile" firstName="Karthik" lastName="Samy" status="true"></Profile>
+    <Profile title="Profile" firstName="John" lastName="Samy" status="true"></Profile>
+    <Profile title="Profile" firstName="Abhi" lastName="Samy" status="true"></Profile>
 
+</template>
 
+Child src/components/Profile.vue
+<script>
+export default {
+    props: ['title', 'firstName', 'lastName', 'status'],
+    setup(){
 
+    }
+}
+</script>
+<template>
+    <div>
+        <h1>Profile Info </h1>
+        <h2>{{ firstName }} {{ lastName }}</h2>
+        <h2>{{ status ? "Available" : "Not Available" }}</h2>
+    </div>
+</template>
+....................................................................................
+			Compostion api : props - setup attribute
+.....................................................................................
 
+Parent: src/App.vue
+<script setup>
+import Profile from './components/Profile.vue'
+const firstName = 'Subramanian'
+const lastName = 'Murugan'
+const status = true
+</script>
+<template>
+    <Profile title="Profile" :firstName="firstName" :lastName="lastName" :status="status"></Profile>
+    <Profile title="Profile" firstName="Ram" lastName="Samy" status="true"></Profile>
+    <Profile title="Profile" firstName="Karthik" lastName="Samy" status="true"></Profile>
+    <Profile title="Profile" firstName="John" lastName="Samy" status="true"></Profile>
+    <Profile title="Profile" firstName="Abhi" lastName="Samy" status="true"></Profile>
+
+</template>
+
+Child src/Profile.vue
+<script setup>
+import Profile from './components/Profile.vue'
+const firstName = 'Subramanian'
+const lastName = 'Murugan'
+const status = true
+</script>
+<template>
+    <Profile title="Profile" :firstName="firstName" :lastName="lastName" :status="status"></Profile>
+    <Profile title="Profile" firstName="Ram" lastName="Samy" status="true"></Profile>
+    <Profile title="Profile" firstName="Karthik" lastName="Samy" status="true"></Profile>
+    <Profile title="Profile" firstName="John" lastName="Samy" status="true"></Profile>
+    <Profile title="Profile" firstName="Abhi" lastName="Samy" status="true"></Profile>
+
+</template>
+
+Task:
+  Product Component with Props 
+  id,name,price,qty
+........................................................................
 
 
 
