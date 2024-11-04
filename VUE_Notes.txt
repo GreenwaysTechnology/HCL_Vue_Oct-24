@@ -2338,8 +2338,187 @@ In Frameworks like angular,vue, we have feature called directives
 ....................................................................................
 			     Attribute Directives
 ....................................................................................
+.....................................................................................
+			 Custom attribute  
 
 
+1.Built in element Attributes
+
+ <img src="" alt="">
+       |      |
+   Attributes - Built in attributes
+
+Browser knows how to put logic to src and alt.
+
+2.Custom attributes on existing html elements
+
+<img customAttribute />
+        | 
+     custom attribute
+How to teach browser to parse custom Attributes 
+  "Through Javascript"
+
+eg: Vue rendered page:
+
+<div id="app" data-v-app="">
+
+.....................................................................................
+	Vue.js Helps to add Custom attributes on existing elements via "Directives" -		    	       Attribute Directives
+.....................................................................................
+Vue js attribute directive syntax:
+
+v-directiveName
+
+
+Built in Directives:
+...................
+v-text
+v-html
+v-show
+v-if
+v-else
+v-else-if
+v-for
+v-on
+v-bind
+v-model
+v-slot
+v-pre
+v-once
+v-memo
+v-cloak
+
+Special Attributes
+key
+ref
+is
+
+Built in custom elements(custom directives/components)
+.......................................................
+<Transition>
+<TransitionGroup>
+<KeepAlive>
+<Teleport>
+<Suspense>
+
+Special Elements
+<component>
+<slot>
+<template>
+
+<script setup>
+const firstName="Subramanian"
+const lastName='Murugan'
+</script>
+<template>
+<div>
+    <h1>Data binding using interpolation {{name}}</h1>
+    <h1>Data binding using v-text</h1>
+    <h2 v-text="`Name ${firstName}  ${lastName} `"></h2>
+    <h1>Data binding using v-html</h1>
+    <h2 v-html="`Name ${name}`"></h2>
+
+</div>
+</template>
+.....................................................................................
+			  v-bind
+.....................................................................................
+
+...................................................................................
+			v-bind
+..................................................................................
+
+v-bind attach html attributes or components values dynamically.
+
+Binding means attach value to the attribute.
+
+Types of binding
+
+1.static binding
+2.dynamic binding
+
+1.static binding
+
+ <img src="logo.png">
+  
+   here the value of src cant be changed once it is rendered
+ 
+
+2.dynamic binding
+
+  <img v-bind:src="variableHoldingImageValue"/>
+
+  let variableHoldingImageValue="logo.png"
+
+ v-bind:src
+   is dynamic binding, that src value can be changed dynamically.
+
+
+eg:
+<script setup>
+const imgUrl = "/src/assets/logo.svg";
+const isHidden = true;
+const isEnabled= false 
+</script>
+
+<template>
+  <div>
+    <h1>Static Binding</h1>
+    <img src="./assets/logo.svg" height="100" width="100" />
+  </div>
+  <div>
+    <h1>Dynamic Binding</h1>
+    <img v-bind:src="imgUrl" height="100" width="100" />
+  </div>
+  <div>
+    <h1>Dynamic binding with show and hide</h1>
+    <article v-bind:hidden="isHidden">This is article</article>
+  </div>
+  <div>
+    <h1>Dynamic binding with enable and disable</h1>
+    <button v-bind:disabled="isEnabled">button</button>
+  </div>
+</template>
+<style></style>
+.....................................................................................
+.....................................................................................
+			Code Refactoring for v-bind Directive
+.....................................................................................
+
+Full syntax
+<button v-bind:disabled="isEnabled">button</button>
+
+Short cut:
+<button :disabled="isEnabled">button</button>
+
+
+Eg:
+<script setup>
+const imgUrl = "/src/assets/logo.svg";
+const isHidden = true;
+const isEnabled = false;
+</script>
+
+<template>
+  <div>
+    <h1>Static Binding</h1>
+    <img src="./assets/logo.svg" height="100" width="100" />
+  </div>
+  <div>
+    <h1>Dynamic Binding</h1>
+    <img :src="imgUrl" height="100" width="100" />
+  </div>
+  <div>
+    <h1>Dynamic binding with show and hide</h1>
+    <article :hidden="isHidden">This is article</article>
+  </div>
+  <div>
+    <h1>Dynamic binding with enable and disable</h1>
+    <button :disabled="isEnabled">button</button>
+  </div>
+</template>
+<style></style>
+.....................................................................................
 
 
 
