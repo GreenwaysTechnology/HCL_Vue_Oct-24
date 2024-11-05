@@ -3162,7 +3162,193 @@ const onUpdate = (name,evt) => {
 </template>
 <style></style>
 ....................................................................................
+....................................................................................
+			 State (Reactive State) and Event Handling
+....................................................................................
 
+We have seen how to represent data, but we have not seen how to change data.
+
+.....................................................................................
+			State Mutation(update) in Options API
+.....................................................................................
+
+src/components/Counter.vue
+
+<script>
+export default {
+  data() {
+    //reactive state
+    return {
+      counter: 0,
+    };
+  },
+  methods: {
+    inc() {
+      //access reactive state variable inside listener
+      this.counter++; //mutation happens
+    },
+  },
+};
+</script>
+<template>
+  <div>
+    <h1>Counter App</h1>
+    <h2>Value : {{ counter }}</h2>
+    <button @click="inc">+</button>
+  </div>
+</template>
+<style></style>
+
+src/App.vue
+<script>
+import Counter from "./components/Counter.vue";
+export default {
+  components: {
+    Counter,
+  },
+};
+</script>
+<template>
+  <Counter />
+</template>
+<style></style>
+.....................................................................................
+		       Multi State-Options API
+.....................................................................................
+
+src/components/Review.vue
+<script>
+export default {
+  data() {
+    //reactive state
+    return {
+      like: 0,
+      dislike: 0,
+    };
+  },
+  methods: {
+    onLike() {
+      //access reactive state variable inside listener
+      this.like++; //mutation happens
+    },
+    onDislike() {
+      //access reactive state variable inside listener
+      this.dislike++; //mutation happens
+    },
+  },
+};
+</script>
+<template>
+  <div>
+    <h1>Review App</h1>
+    <h2>Like : {{ like }} Dislike {{ dislike }}</h2>
+    <button @click="onLike">Like</button>
+    <button @click="onDislike">DisLike</button>
+  </div>
+</template>
+<style></style>
+
+src/App.vue
+
+<script>
+import Review from "./components/Review.vue";
+export default {
+  components: {
+    Review,
+  },
+};
+</script>
+<template>
+  <Review />
+</template>
+<style></style>
+....................................................................................
+			 Dynamic props - Passing state as prop
+....................................................................................
+
+//Child Component
+src/components/ReviewDashboard.vue
+
+<script>
+export default {
+  props: ["like", "dislike",'onLike','onDislike'],
+};
+</script>
+<template>
+  <div>
+    <h1>ReviewDashboard</h1>
+    <h2>Like : {{ like }} Dislike {{ dislike }}</h2>
+    <button @click="onLike">Like</button>
+    <button @click="onDislike">DisLike</button>
+  </div>
+</template>
+<style></style>
+
+
+
+src/components/Review.vue
+
+<script>
+import ReviewDashboard from "./ReviewDashboard.vue";
+
+export default {
+  components: {
+    ReviewDashboard,
+  },
+  data() {
+    //reactive state
+    return {
+      like: 0,
+      dislike: 0,
+    };
+  },
+  methods: {
+    onLike() {
+      //access reactive state variable inside listener
+      this.like++; //mutation happens
+    },
+    onDislike() {
+      //access reactive state variable inside listener
+      this.dislike++; //mutation happens
+    },
+  },
+};
+</script>
+<template>
+  <div>
+    <ReviewDashboard
+      :like="like"
+      :dislike="dislike"
+      :onLike="onLike"
+      :onDislike="onDislike"
+    />
+  </div>
+</template>
+<style></style>
+.....................................................................................
+
+Task:
+
+ You must have component called Rating component.
+
+ Reating Component state
+
+   state= {
+     name:'Movie'
+     actor:'',
+     director:''
+     rating: { 
+        like:0,
+        dislike:0  
+     }
+   }
+
+1.Create "Movie"  Component which has state and biz logic
+
+2.Create "MovieDashboard" Component which should show only movie Data (name,actor,director)
+
+3.Create "MovieRating" Component which should display only rating(like,dislike)
+.....................................................................................
 
 
 

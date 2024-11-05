@@ -1,8 +1,11 @@
-<script setup>
-const onUpdate = (name,evt) => {
-    console.log(name)
+<script>
+import Review from './components/Review.vue';
+export default {
+    components: {
+        Review
+    }
 }
 </script>
 <template>
-    <button @click="onUpdate('Subramanian')">SendData</button>
+    <Review />
 </template>
