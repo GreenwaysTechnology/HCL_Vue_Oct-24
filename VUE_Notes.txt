@@ -2420,10 +2420,6 @@ const lastName='Murugan'
 
 </div>
 </template>
-.....................................................................................
-			  v-bind
-.....................................................................................
-
 ...................................................................................
 			v-bind
 ..................................................................................
@@ -2518,7 +2514,6 @@ const isEnabled = false;
   </div>
 </template>
 <style></style>
-.....................................................................................
 .....................................................................................
 			  Property binding- props binding
 ....................................................................................
@@ -2707,6 +2702,234 @@ Task:
   Product Component with Props 
   id,name,price,qty
 ........................................................................
+.....................................................................................
+			Property Validation -Composition setup attribute
+.....................................................................................
+
+Some times i want to enforce the property data type validation, which is only for runtime verification.
+
+For eg:
+ I have property called age
+ i need to define rule for age that must be be number, it should not be string.
+
+Simple Syntax:
+
+1.defineProps(['age','name'])
+
+Validation Syntax:
+
+2.defineProps({
+ age:Number,
+ id:[Number,String] //can be string or can be number
+ name:{ 
+   type:String,
+   required:true,
+   default:'foo'
+  
+ },
+ status: {
+   validator(value){
+      return ['OK','NOTOK','Success','Failure'].includes(value)
+   }
+ }
+})
+
+
+Runtime data types:
+1.Number
+2.String
+3.Boolean
+4.Array
+5.Object
+6.Date
+7.Function
+8.Symbol
+
+
+Eg:
+src/components/User.vue
+<script setup>
+const props = defineProps({
+  id: [Number, String],
+  name: String,
+  email: String,
+  status: {
+    validator(value) {
+      return ["Available", "NotAvailable"].includes(value);
+    },
+  },
+});
+</script>
+<template>
+  <div>
+    <h1>User information</h1>
+    <h2>Id {{ props.id }}</h2>
+    <h2>Name {{ props.name }}</h2>
+    <h2>Email {{ props.email }}</h2>
+    <h2>Status {{ props.status }}</h2>
+  </div>
+</template>
+<style></style>
+
+
+
+
+
+src/App.vue
+<script setup>
+import User from "./components/User.vue";
+let id =1;
+let name=34
+let email="karthik@gmail.com"
+let status ="Available"
+</script>
+<template>
+  <div>
+    <!-- Static Property -->
+    <User id="1" name="subu" status="Available" email="subu@gmail.com" />
+    <User id="2" name="murugan" status="Available" email="murugan@gmail.com" />
+    <!-- Dynamic property -->
+    <User :id="id" :name="name" :status="status" :email="email" />
+  </div>
+</template>
+<style></style>
+
+
+After running you can see in the console
+
+App.vue?t=1722573470334:56 [Vue warn]: Invalid prop: type check failed for prop "name". Expected String with value "34", got Number with value 34. 
+  at <User id=1 name=34 status="Available"  ... > 
+  at <App>
+
+It shows only warning not error, because js verifies the type only during runtime.
+....................................................................................
+			Default Props
+....................................................................................
+
+if you dont pass value from parent to child as prop, the default prop can be supplied
+
+src/components/Header.vue
+<script setup>
+const props = defineProps({
+  title: {
+    default: "IBM",
+  },
+});
+</script>
+<template>
+  <header>
+    <h1>{{ props.title }}</h1>
+  </header>
+</template>
+<style></style>
+
+src/App.vue
+<script setup>
+import Header from "./components/Header.vue";
+</script>
+<template>
+  <Header />
+  <Header title="google" />
+</template>
+<style></style>
+
+..................................................................................
+			One way Data Flow model
+...................................................................................
+
+All Props are passed from parent to child, where child component update the properties?
+			"Props are read only"
+
+
+src/components/Header.vue
+<script setup>
+const props = defineProps({
+  title: {
+    default: "IBM",
+  },
+});
+//update the props
+props.title = "Microsoft";
+</script>
+<template>
+  <header>
+    <h1>{{ props.title }}</h1>
+  </header>
+</template>
+<style></style>
+
+
+src/App.vue
+<script setup>
+import Header from "./components/Header.vue";
+</script>
+<template>
+  <Header title="google" />
+</template>
+<style></style>
+
+Output:
+[Vue warn] Set operation on key "title" failed: target is readonly. Proxy(Object) {title: 'google'}
+....................................................................................
+
+..................................................................................
+			One way Data Flow model
+...................................................................................
+
+All Props are passed from parent to child, where child component update the properties?
+			"Props are read only"
+
+
+src/components/Header.vue
+<script setup>
+const props = defineProps({
+  title: {
+    default: "IBM",
+  },
+});
+//update the props
+props.title = "Microsoft";
+</script>
+<template>
+  <header>
+    <h1>{{ props.title }}</h1>
+  </header>
+</template>
+<style></style>
+
+
+src/App.vue
+<script setup>
+import Header from "./components/Header.vue";
+</script>
+<template>
+  <Header title="google" />
+</template>
+<style></style>
+
+Output:
+[Vue warn] Set operation on key "title" failed: target is readonly. Proxy(Object) {title: 'google'}
+....................................................................................
+
+Case Study:
+
+You have to create Customer Component having customer details
+
+1.Basic Customer information -  id,firstName,lastName,status
+2.Address - street,city,state,country,zipcode
+3.Avatar -Customer Image
+4.Location - lat,lng
+
+App-->props--Customer--->Address,Avatar,Location
+<Customer></Customer>
+
+Customer:
+ Customer basic details
+ <Avatar/>
+ <Address :street="props.street"/>
+ <Location/>
+Prop validation:
+  You can set validation rules for your component
 
 
 
