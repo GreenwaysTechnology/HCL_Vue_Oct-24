@@ -2931,6 +2931,237 @@ Customer:
 Prop validation:
   You can set validation rules for your component
 
+................................&&&&&&&&&&&&&&&&&....................................
+			Even Handling - Event binding
+....................................................................................
+Event handling is one of the most popular concept in javascript as part of DOM programming.
+Event handling helps to interact with user.
+Events  are signals triggered by user or system, send to os system, the software or hardware reacts according to the event.
+
+Events are classified into two category
+
+1.Hardware events
+   Triggered by user or system, interacts with hardware devices   
+eg:
+  Mouse events
+    onclick,ondblclick,onmouseenter...
+  https://www.w3schools.com/jsref/obj_mouseevent.asp
+  Keyboard events
+   onkeypress,onkeydown
+  https://www.w3schools.com/jsref/event_onkeypress.asp
+  Touch events
+  ontouchstart,ontouchend
+  https://www.w3schools.com/jsref/obj_touchevent.asp
+
+2.Application events
+   attached with objects called dom objects
+  onload,oncomplete
+...................................................................................
+		        How event handling works
+
+Event handling has been designed based on the design pattern called "pub-sub"/observer design pattern.
+
+There are two actors:
+1.Producer
+   The producer is something who sends signals(events - name of the event and data assoicated) to the listener
+2.Listener
+  The Listener is someone who waits/listens for event.
+  Once the event is given who reacts/respond
+
+In js :
+ Listener is function.
+
+//event is just reference to the Event Object having information about event, and data
+function listener(event){
+     event.target.value
+}
+event object is a bridge between producer and listener
+
+In javascript , events are given by language itself.
+
+events are started with "on+eventName" - 
+ onclick="listener"
+
+addEventListener('click',listener)
+listeners are plain js functions with event object reference arg
+
+Frameworks like vue,react,angular who adds their own abstractions.
+
+We can attach event on any dom element which could be application or hardware
+...................................................................................
+
+Vue Js and event handling:
+..........................
+
+Vue attaches events with any element with help of directive
+                          "v-on"
+
+Syntax:
+1. v-on:NameOftheEvent="listener" -  v-on:click="update"
+2. @click="listener" - @click="update"
+.....................................................................................		 	Event Handling (Declration)-Options API Pattern
+.....................................................................................
+
+create new project
+
+npm init vue@lastest
+   vue-eventhandling  
+
+Simple Event handler declaration:
+
+src/App.vue
+<script>
+export default {
+  components: {},
+  data() {
+    return {};
+  },
+  //listener
+  methods: {
+    //hello listener
+    hello(evt) {
+      console.log("hello is called");
+    },
+    hai(evt) {
+      console.log("hai is called");
+    },
+  },
+};
+</script>
+<template>
+  <div>
+    <button v-on:click="hello">Hello</button>
+    <button @click="hai">Hai</button>
+  </div>
+</template>
+<style></style>
+
+.....................................................................................		 Event Handling (Declration)-Composition API Pattern -Setup function
+.....................................................................................
+
+src/App.vue
+Simple Event Declaration:
+<script>
+export default {
+  setup() {
+    //event handler
+    function hello() {
+      console.log("hello");
+    }
+    function hai() {
+      console.log("hai");
+    }
+    //must return function
+    return {
+      hello,
+      hai,
+    };
+  },
+};
+</script>
+<template>
+  <div>
+    <button v-on:click="hello">Hello</button>
+    <button @click="hai">Hai</button>
+  </div>
+</template>
+<style></style>
+
+
+Arrow version of Event handler:
+<script>
+export default {
+  setup() {
+    //event handler : ES 5 Syntax
+    const hello = (evt) => {
+      console.log("hello");
+    };
+    const hai = (evt) => {
+      console.log("hai");
+    };
+    //must return function
+    return {
+      hello,
+      hai,
+    };
+  },
+};
+</script>
+<template>
+  <div>
+    <button v-on:click="hello">Hello</button>
+    <button @click="hai">Hai</button>
+  </div>
+</template>
+<style></style>
+
+....................................................................................		 Event Handling (Declration)-Composition API Pattern -Setup attribute
+.....................................................................................
+
+<script setup>
+const hello = (evt) => {
+  console.log("hello");
+};
+const hai = (evt) => {
+  console.log("hai");
+};
+</script>
+<template>
+  <div>
+    <button v-on:click="hello">Hello</button>
+    <button @click="hai">Hai</button>
+  </div>
+</template>
+<style></style>
+.....................................................................................
+.....................................................................................
+		 How to attach more than one listener on single DOM Element
+...................................................................................
+
+<dom v-on:eventName="listener" v-on:eventName="listener">
+<dom @eventName="listener" @eventName="listener">
+
+<dom v-on="{mouseenter:onMouseEnter,mouseleave:onMouseLeave}">
+
+<script setup>
+const onMouseEnter = (evt) => {
+  console.log("enter");
+};
+const onMouseLeave = (evt) => {
+  console.log("leave");
+};
+</script>
+<template>
+  <div v-on="{mouseenter:onMouseEnter,mouseleave:onMouseLeave}">
+        Touch Me
+  </div>
+</template>
+<style></style>
+....................................................................................
+		  How to pass data to the listener function
+..................................................................................
+<script setup>
+const onUpdate = (name) => {
+  console.log(name);
+};
+</script>
+<template>
+  <button @click="onUpdate('Subramanian')">Send</button>
+</template>
+<style></style>
+
+What if i want to pass event object also.
+
+<script setup>
+const onUpdate = (name,evt) => {
+  console.log(name);
+};
+</script>
+<template>
+  <button @click="onUpdate('Subramanian',$event)">Send</button>
+</template>
+<style></style>
+....................................................................................
 
 
 
