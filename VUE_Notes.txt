@@ -3349,7 +3349,370 @@ Task:
 
 3.Create "MovieRating" Component which should display only rating(like,dislike)
 .....................................................................................
+.....................................................................................
+			Composition API and State Mutation
+..................................................................................... 
+....................................................................................
+			   Reactivity
+....................................................................................
 
+What is Reactivity?
+  Reactivity is one of the core vue js concept.
+Component state are "reactive javascript objects"
+
+The word reactivity means "changing" the state(object),whenever changes happen it publishes some events, based on events,reactions happens.
+
+Programming work flow in general
+
+int x =10;
+int y =20;
+
+int result = x + y
+
+when you compute this code, the runtime will execute instructions top-down pattern.
+if there is change in variable (like x or y), will not update result variable
+ -Sequential programming model.
+
+What if i want to update the "result" variable value automatically when ever x or y changes.
+
+eg:
+Excel spreed sheet is one of the best eg for reactivitity programming
+
+eg;
+
+let A1=1
+let A2=2
+let A3 =A1+A2
+console.log(A3) => 3
+
+A2=4
+console.log(A3) => 5
+
+How to apply the same programming in js?
+
+Here when you mutate A1 or A2, does not change automatically.
+
+We can wrap this code inside function
+
+ let A3
+ function update(){
+   A3 = A1 + A2
+ }
+
+in order get fresh value, we have to re-run the code that updates A3
+
+Pointers:
+
+1.There should be some update function, which produces a "side effect /effect".
+  if any function which changes the state of the program called side effect.
+
+2.Here ,A1 and A2 are considered dependencies of the side effect, because which helps makes side effects.
+  According to dependencies, this effect is said to be "subscriber"
+
+When ever "A1 and A2" changed, we need to invoke "update" function,which cause side effects.
+
+It looks like event driven programming (Pub-Sub Pattern /Observerable and Observer) 
+
+ function whenDepChange(update){
+     update()
+ }
+
+ let A3
+ function update(){
+   A3 = A1 + A2
+ }
+
+ whenDepChange(function(){
+     A3 = A1 + A2
+ })
+ whenDepChange(update)
+
+Role of whenDepchange function:
+................................
+
+1.Tracking the dependencies,
+    By evaulating the expression A1 and A2 ,Whether any one of them is read or not.
+
+Vue Internal Reactivity WorkFlow:
+
+Tracker--->triggers--whenDepChange--->runs update function---returns modified state
+	
+...................................................................................
+...................................................................................
+			  Vue js and Reactivity
+
+Vue js uses "Reactivity subsystem" in order to track all state variables, when ever which changes happen, it inform the vue engine for re render process..
+
+
+In Options Api pattern,
+
+export default {
+  
+  data(){
+   let count =0
+    return {
+      count:count
+    }
+  }
+
+}
+inside data function , if you return object, by default it is reactive, meaning that any changes detected, it starts re render ui.
+
+
+In Compostion api pattern: whether is setup fun or setup attribute
+
+<script>
+export default {
+ 
+   setup() {
+    let count =0;
+	return {
+	  count:count
+       }
+   }  
+
+}
+</script>
+by default setup function /setup attribute does not return reactive state..(it is normal object)
+
+In options api every property we return is reactive, but in compostion api we can restrict reactive and non reactive.
+
+How to declare reactive state/ how to attach reactivity feature?
+
+Compostion Api reactive methods:
+................................
+ref()
+computed()
+reactive()
+readonly()
+watchEffect()
+watchPostEffect()
+watchSyncEffect()
+watch()
+
+ref():
+ It is function which returns Object, not value
+
+function ref<T>(value: T): Ref<UnwrapRef<T>>
+
+interface Ref<T> {
+  value: T
+}
+..................................................................................
+			 ref-Composotion api using setup function
+
+<script>
+import { ref } from "vue";
+export default {
+  setup() {
+    //variables must be converted into reactive
+    let like = ref(0);
+    let dislike = ref(0);
+    console.log(like.value);
+
+    //listener
+    const onLike = () => {
+      console.log("onLike");
+      like.value++;
+    };
+    const onDislike = () => {
+      console.log("onLike");
+      dislike.value++;
+    };
+
+    //this object which contains variables not reactive by default
+    return {
+      like,
+      dislike,
+      onLike,
+      onDislike
+    };
+  },
+};
+</script>
+<template>
+  <div>
+    <h1>Review Component</h1>
+    <h1>Like {{ like }} Dislike {{ dislike }}</h1>
+    <button @click="onLike">Like</button>
+    <button @click="onDislike">Dislike</button>
+  </div>
+</template>
+<style></style>
+.....................................................................................
+			 setup attribute and ref
+......................................................................................	
+<script setup>
+import { ref } from "vue";
+//variables must be converted into reactive
+let like = ref(0);
+let dislike = ref(0);
+//listener
+const onLike = () => {
+  console.log("onLike");
+  like.value++;
+};
+const onDislike = () => {
+  console.log("onLike");
+  dislike.value++;
+};
+</script>
+<template>
+  <div>
+    <h1>Review Component</h1>
+    <h1>Like {{ like }} Dislike {{ dislike }}</h1>
+    <button @click="onLike">Like</button>
+    <button @click="onDislike">Dislike</button>
+  </div>
+</template>
+<style></style>
+..................................................................................
+                       Passing Explicit Values to Listener
+
+<!-- Passing values to listener -->
+<script setup>
+import { ref } from "vue";
+//variables must be converted into reactive
+let like = ref(0);
+let dislike = ref(0);
+//listener
+const onLike = (incrementer, evt) => {
+  like.value += incrementer;
+};
+const onDislike = () => {
+  dislike.value++;
+};
+</script>
+<template>
+  <div>
+    <h1>Review Component</h1>
+    <h1>Like {{ like }} Dislike {{ dislike }}</h1>
+    <button @click="onLike(4, $event)">Like</button>
+    <button @click="onDislike">Dislike</button>
+  </div>
+</template>
+<style></style>
+.....................................................................................
+			Inline Listener
+....................................................................................
+
+Without using explicit listener
+
+<script setup>
+import { ref } from "vue";
+let like = ref(0);
+let dislike = ref(0);
+</script>
+<template>
+  <div>
+    <h1>Review Component</h1>
+    <h1>Like {{ like }} Dislike {{ dislike }}</h1>
+    <button @click="like++">Like</button>
+    <button @click="dislike++">Dislike</button>
+  </div>
+</template>
+<style></style>
+....................................................................................
+			 Reactive Objects
+..................................................................................
+
+As of now, we have declared reactive primtive variables, so how to declare reactive state.
+ 
+let count = ref(0) //primitive variable
+
+let comments = reactive({
+  like:0,
+  dislike:100
+})
+
+ref with Reactive Object:
+........................
+<script setup>
+import { ref } from "vue";
+let review = ref({ like: 0, dislike: 0 });
+</script>
+<template>
+  <div>
+    <h1>Review Component</h1>
+    <h1>Like {{ review.like }} Dislike {{ review.dislike }}</h1>
+    <button @click="review.like++">Like</button>
+    <button @click="review.dislike++">Dislike</button>
+  </div>
+</template>
+<style></style>
+
+ref with Reactive Object and Listener
+<script setup>
+import { ref } from "vue";
+let review = ref({ like: 0, dislike: 0 });
+
+const onLike = ()=>{
+    review.value.like++
+}
+</script>
+<template>
+  <div>
+    <h1>Review Component</h1>
+    <h1>Like {{ review.like }} Dislike {{ review.dislike }}</h1>
+    <button @click="onLike">Like</button>
+    <button @click="review.dislike++">Dislike</button>
+  </div>
+</template>
+<style></style>
+
+in order to mutate objects we have special function called "reactive" function.
+
+<script setup>
+import { reactive } from "vue";
+let review = reactive({ like: 0, dislike: 0 });
+
+const onLike = ()=>{
+    review.like++
+}
+</script>
+<template>
+  <div>
+    <h1>Review Component</h1>
+    <h1>Like {{ review.like }} Dislike {{ review.dislike }}</h1>
+    <button @click="onLike">Like</button>
+    <button @click="review.dislike++">Dislike</button>
+  </div>
+</template>
+<style></style>
+.....................................................................................
+...................................................................................	              How to avoid deep conversion with Reactive Nested object	
+....................................................................................
+
+shallowReactive:
+  shallow version of reactive()
+ Unlike reactive there is no deep conversion.... only root properties are reactive 
+
+<script setup>
+import { shallowReactive } from 'vue'
+
+//deep nesting
+const comments = shallowReactive({
+    like: 0,
+    dislike: 0,
+    recommend: {
+        rating: {
+            value: 0
+        }
+    }
+})
+
+</script>
+<template>
+    <div>
+        <h1>Reactive State</h1>
+        <h1>Like : {{comments.like}} Dislike {{comments.dislike}} Rating {{comments.recommend.rating.value}}</h1>
+        <button @click="comments.like++">Like</button>
+        <button @click="comments.dislike++">Dislike</button>
+        <button @click="comments.dislike++">Dislike</button>
+        <button @click="comments.recommend.rating.value++">Rating</button>
+
+    </div>
+</template>
 
 
  
