@@ -3713,6 +3713,35 @@ const comments = shallowReactive({
 
     </div>
 </template>
+...................................................................................
+		   Reactivity ,State Mutation,and Object Destructuring
+...................................................................................
+After reactive object destructuring , can we do state mutations?
+  Reactivity will be lost once if the object is destructured..
+
+1.toRef - single property
+2.toRefs - multiple property
+
+
+<script setup>
+import { reactive, toRefs } from "vue";
+//Object destruction
+let { like, dislike } = toRefs(reactive({ like: 0, dislike: 0 }));
+
+const onLike = () => {
+  like.value++;
+};
+</script>
+<template>
+  <div>
+    <h1>Review Component</h1>
+    <h1>Like {{ like }} Dislike {{ dislike }}</h1>
+    <button @click="onLike">Like</button>
+    <button @click="dislike++">Dislike</button>
+  </div>
+</template>
+<style></style>
+
 
 
  
