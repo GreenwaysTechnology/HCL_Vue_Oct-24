@@ -3741,8 +3741,363 @@ const onLike = () => {
   </div>
 </template>
 <style></style>
+....................................................................................
+				List Rendering -Arrays
+....................................................................................
+Arrays:
+ =>Arrays are basic datastructure which is used to render collection of data
+ =>Arrays are dynamic
+
+Arrays and UI:
+ if you want render more data, then array is used.
+Arrays can help to build in UI layouts in various ways
 
 
+UI layouts:
+ are built with help of arrays.
+
+1.List View
+ <ul>
+   <li>
+ </ul>
+2.Card View layout
+  <div><header><section>
+3.Grid view
+  table
+
+....................................................................................
+				List Rendering -Arrays
+....................................................................................
+Arrays:
+ =>Arrays are basic datastructure which is used to render collection of data
+ =>Arrays are dynamic
+
+Arrays and UI:
+ if you want render more data, then array is used.
+Arrays can help to build in UI layouts in various ways
+
+
+UI layouts:
+ are built with help of arrays.
+
+1.List View
+ <ul>
+   <li>
+ </ul>
+2.Card View layout
+  <div><header><section>
+3.Grid view
+  table
+
+.....................................................................................
+.....................................................................................
+			   v-for directive
+....................................................................................
+  This directive used for array rendering and object rendering.
+
+<ul>
+   <li v-for="(variable,index) in array">
+</ul>
+
+Simple List
+
+<script setup>
+import {reactive} from 'vue'
+const List = reactive(["Subramanian", "Karthik", "Murugan"]);
+</script>
+<template>
+ <div>
+    <ul>
+      <li v-for="name in List">
+         {{name}}
+      </li>
+    </ul>
+ </div>
+</template>
+
+
+Objects/Array List:
+...................
+<script setup>
+import { reactive } from "vue";
+import TODOS from "./mock-data/Todos";
+const todosList = reactive(TODOS);
+</script>
+<template>
+  <div>
+    <ul>
+      <li v-for="todo in todosList">
+        {{ todo.title }}
+      </li>
+    </ul>
+  </div>
+</template>
+
+....................................................................................
+			   List with Index
+....................................................................................
+<script setup>
+import { reactive} from 'vue'
+import TODOS from './mock-data/todos'
+
+const todos = reactive(TODOS)
+
+</script>
+<template>
+    <div>
+      <ul>
+        <li v-for="(todo,index) in todos">
+          <!-- <span>{{index}} {{todo.title}}</span> -->
+          <span>{{todo.title}}</span>
+        </li>
+      </ul>
+
+    </div>
+</template>
+....................................................................................	
+....................................................................................
+			   Nested List
+...................................................................................
+
+The outter arry is iterated with "Item in Array"
+The inner array is iterated with "Item of NestedArray"
+
+
+<script setup>
+import { reactive } from 'vue'
+
+const persons = [
+    {
+        id: 1,
+        name: 'A',
+        friends: [
+            {
+                name: 'F1'
+            },
+            {
+                name: 'F2'
+            },
+            {
+                name: 'F3'
+            }
+        ]
+    },
+    {
+        id: 2,
+        name: 'B',
+        friends: [
+            {
+                name: 'BF1'
+            },
+            {
+                name: 'BF2'
+            },
+            {
+                name: 'BF3'
+            }
+        ]
+    },
+    {
+        id: 3,
+        name: 'C',
+        friends: [
+            {
+                name: 'CF1'
+            },
+            {
+                name: 'CF2'
+            },
+            {
+                name: 'CF3'
+            }
+        ]
+    }
+]
+
+const list = reactive(persons)
+
+</script>
+<template>
+    <div>
+        <ul>
+            <li v-for="person in list">
+                <span>{{person.name}}</span>
+                <ul>
+                    <li v-for="friend of person.friends">
+                            <span>{{friend.name}}</span>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+    </div>
+</template>
+
+....................................................................................
+                          Use Case 
+
+Render collection 
+When i click the item, we need to show the details 
+
+eg:
+  Todo item when i click todo item, show the full todo detail
+
+<script setup>
+import { reactive } from "vue";
+
+const TODOS = [
+     
+    {
+        userId: 1,
+        id: 1,
+        title: "delectus aut autem",
+        completed: false
+    },
+    {
+        userId: 1,
+        id: 2,
+        title: "quis ut nam facilis et officia qui",
+        completed: false
+    },
+    {
+        userId: 1,
+        id: 3,
+        title: "fugiat veniam minus",
+        completed: false
+    },
+]
+
+const todosList = reactive(TODOS);
+const onSelectItem=()=>{
+    console.log('item is selected')
+}
+</script>
+<template>
+  <div>
+    <ul>
+      <li v-for="todo in todosList" @click="onSelectItem">
+     {{ todo.title }}
+      </li>
+    </ul>
+  </div>
+</template>
+....................................................................................
+				Lab
+...................................................................................
+
+1.You have to render list of Users from the array
+  https://jsonplaceholder.typicode.com/users
+
+Display field:
+ UserName
+2.When you click on Each user Name, you have to display the complete other user details
+  
+  1 details
+  name:XXX
+  email:XXX
+    
+  address:
+    XXX
+    geo
+  phone
+  website
+  company
+     XXXX
+
+Here you have to create a separate Address Component,geo component, from the user component each user address must be passed as prop.
+ 
+  <User>
+    <Address>
+     <Geo>
+ </User>
+
+.....................................................................................
+.....................................................................................
+				Array Mutations
+.....................................................................................
+
+Push,remove,update array elements
+
+<script setup>
+import { reactive } from 'vue';
+const todos = reactive([])
+//listener
+const addItem = () => {
+    todos.push({ id: Math.random(), text: 'Learn Vue!' })
+}
+</script>
+<template>
+
+    <ul>
+        <li v-for="todo in todos">
+            <span>{{todo}}</span>
+        </li>
+    </ul>
+    <button @click="addItem">AddItem</button>
+</template>
+<style>
+
+</style>
+
+In vue all array apis will not trigger render cycle..
+
+Api which trigger's render cycle - Mutating apis
+
+1.push
+2.pop
+3.shift
+4.unshift
+5.splice
+6.sort
+7.reverse
+
+Lab:
+ Render List 
+ 
+Sample
+
+   item 1   - deleteItem (button)
+   Item 2   - deleteITem (button) 
+
+   Add Button
+
+...................................................................................
+			 Filtering/Sorting arrays with immutable api
+...................................................................................
+
+What is immutable api?
+
+ when ever we do any changes on object, instead of changing original object changes, which creates a new copy of the object- immutable.
+
+eg:
+  if you add new item into array, the runtime will create new array,instead of mutating original memory.
+
+Array immutable apis:
+ map,filter,reduce - immutable apis
+ or 
+ you can use even spread operator or Object.assign method
+
+<script setup>
+import { ref } from "vue";
+import TODOS from "./mock-data/Todos";
+const todos = ref(TODOS);
+const filter = () => {
+  return todos.value= todos.value.filter((todo) => todo.completed);
+};
+</script>
+
+<template>
+  <div>
+    <button @click="filter">FilterByStatus</button>
+    <h1>Total todos: {{ todos.length }}</h1>
+    <ul>
+      <li v-for="todo in todos" :key="todo.id">
+        <span>{{ todo.title }}</span>
+      </li>
+    </ul>
+  </div>
+</template>
+.....................................................................................
 
  
 
