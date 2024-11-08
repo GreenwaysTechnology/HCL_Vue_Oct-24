@@ -4098,16 +4098,124 @@ const filter = () => {
   </div>
 </template>
 .....................................................................................
+				Computed Properties
+..................................................................................
 
- 
+Computed properties are special methods which returns the template expressions.
+If we use the expressions in a page more times, we can cache it.
+
+Computed Properties in Options Api:
+..................................
+
+Without Computed Property method:
+<script>
+export default {
+  data() {
+    return {
+      author: {
+        name: "John Doe",
+        books: ["Vue 2- Advanced Guide", "Vue 3- Basic Guide"],
+      }
+    };
+  },
+}
+</script>
+<template>
+  <p>{{ author.name }} {{ author.books.length > 0 ? 'has' : 'has not' }} published books </p>
+</template>
+
+{{ author.books.length > 0 ? 'has' : 'has not' }} - This is expression
+
+ if you include this calculation(expression) more than once in the template, it executes every time
+
+Thats where computed properties  comes into picture
+
+ <script>
+export default {
+    data() {
+        return {
+            author: {
+                name: "John Doe",
+                books: ["Vue 2- Advanced Guide", "Vue 3- Basic Guide"],
+            }
+        }
+    },
+    computed: {
+        publishedBooksMessage() {
+            console.log("called");
+            // return this.author.books.length > 0 ? "Yes" : "No";
+            return this.author.books.length > 0 ? 'has' : 'has not'
+        },
+    },
+}
+</script>
+<template>
+    <p>{{ author.name }} {{ publishedBooksMessage }} published books </p>
+    <p>{{ author.name }} {{ publishedBooksMessage }} published books </p>
+
+</template>
+
+....................................................................................
+			   Methods and Expressions
+
+<script>
+export default {
+    data() {
+        return {
+            author: {
+                name: "John Doe",
+                books: ["Vue 2- Advanced Guide", "Vue 3- Basic Guide"],
+            }
+        }
+    },
+    methods: {
+        calculateBooksMessage() {
+            console.log("method called");
+            return this.author.books.length > 0 ? 'has' : 'has not'
+        }
+    },
+    computed: {
+        publishedBooksMessage() {
+            console.log("called");
+            // return this.author.books.length > 0 ? "Yes" : "No";
+            return this.author.books.length > 0 ? 'has' : 'has not'
+        },
+    },
+}
+</script>
+<template>
+    <p>{{ author.name }} {{ publishedBooksMessage }} published books </p>
+    <p>{{ author.name }} {{ publishedBooksMessage }} published books </p>
+    <br />
+    <div>
+        <h2>{{ calculateBooksMessage() }}</h2>
+        <h2>{{ calculateBooksMessage() }}</h2>
+    </div>
+</template>
 
 
+Now you can notice the same result by invoking a method in the expression which is defined inside methods or computed 
 
+      "methods which are not cached but computed methods are cached"
 
+....................................................................................
+		Computed Properties and Composition api
+.....................................................................................
+<script setup>
+import { reactive, computed } from "vue";
 
+const author = reactive({
+    name: "John Doe",
+    books: ["Vue 2- Advanced Guide", "Vue 3- Basic Guide"],
+});
 
-
-
+const publishedMessage = computed(() => {
+    return author.books.length > 0 ? "has" : "has not";
+});
+</script>
+<template>
+    <p>{{ author.name }} {{ publishedMessage }} published books </p>
+</template>
 
 
 
