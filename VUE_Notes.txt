@@ -4217,19 +4217,188 @@ const publishedMessage = computed(() => {
     <p>{{ author.name }} {{ publishedMessage }} published books </p>
 </template>
 
+Example Scenario
+We'll create a simple Vue 3 app that shows a list of products with their prices and quantities. We'll use computed properties to calculate the total price of all items in the cart.
+
+<template>
+    <div>
+      <h2>Shopping Cart</h2>
+      <ul>
+        <li v-for="product in products" :key="product.id">
+          <span>{{ product.name }} - ${{ product.price }} x {{ product.quantity }}</span>
+          <button @click="incrementQuantity(product.id)">+</button>
+          <button @click="decrementQuantity(product.id)">-</button>
+        </li>
+      </ul>
+      <h3>Total Price: ${{ totalPrice }} Total Items : {{totalQty}}</h3>
+    </div>
+  </template>
+  
+  <script setup>
+  import { ref, computed } from 'vue';
+  
+  // Define products
+  const products = ref([
+    { id: 1, name: 'Apple', price: 1, quantity: 2 },
+    { id: 2, name: 'Banana', price: 0.5, quantity: 3 },
+    { id: 3, name: 'Orange', price: 0.8, quantity: 1 },
+  ]);
+  
+  // Computed property to calculate total price
+  const totalPrice = computed(() => {
+    return products.value.reduce((total, product) => {
+      return total + product.price * product.quantity;
+    }, 0);
+  });
+  const totalQty = computed(() => {
+    return products.value.reduce((total, product) => {
+      return total + product.quantity 
+    }, 0);
+  });
+  // Methods to change the quantity
+  const incrementQuantity = (id) => {
+    const product = products.value.find(p => p.id === id);
+    if (product) {
+      product.quantity++;
+    }
+  };
+  
+  const decrementQuantity = (id) => {
+    const product = products.value.find(p => p.id === id);
+    if (product && product.quantity > 0) {
+      product.quantity--;
+    }
+  };
+  </script>
+
+  .....................................................................................
+			  Data Sharing patterns
+....................................................................................
+
+1.Props or property pattern
+  Sharing data from parent component to child component
+2.Event Emitter pattern
+  Sharing data from child to parent component
+3.Global data sharing pattern
+
+....................................................................................
+			 Event Emitter pattern
+...................................................................................
+
+Child Component can emit event along with data, where as parent component can listen for data.
+
+Event Emitter Syntax:
 
 
+In the child component:
+
+const emitter= defineEmits(['change','remove','save'])
+
+emitter('NameoftheEvent',data)
+
+emitter('onRequest',data)
+
+In the Parent Component
+
+<EventEmitterChild @on-request="getData"/>
+
+function getData(evt){
+  console.log(evt)
+}
+
+eg:
+
+src/components/Child.vue
+<script setup>
+const emit = defineEmits(["onRequest"]);
+
+const onSend = () => {
+  //send data to parent
+  emit("onRequest", "Hello,I am from Child");
+};
+</script>
+
+<template>
+  <div>
+    <h1>Child Component</h1>
+    <button @click="onSend">Send</button>
+  </div>
+</template>
+
+Parent
+src/App.vue
+<!-- Parent Component -->
+<script setup>
+import { ref } from "vue";
+import Child from "./components/Child.vue";
+
+const data = ref("");
+const getData = (evt) => {
+  console.log(evt);
+  data.value = evt;
+};
+</script>
+
+.....................................................................................
+			   Styling
+.....................................................................................
+
+CSS is key feature in every user interface design.
+
+CSS can be integrated in vue js 
+
+Types of styles
+
+1.global style
+2.component specific styles
+
+1.global style is style which is intrdouced in main.js
+
+import './assets/main.css'
+
+import { createApp } from 'vue'
+import App from './App.vue'
+
+createApp(App).mount('#app')
 
 
+2.How to integrate third css frameworks like bootstrap.
+
+npm i bootstrap@5.3.3
 
 
+<script setup>
+</script>
+<template>
+  <div class="container py-4 px-3 mx-auto">
+    <h1>Build Bootstrap with Vue</h1>
+    <article>
+      <p style="color:red">This is article</p>
+    </article>
+    <div class="card" style="width: 18rem">
+      <img src="..." class="card-img-top" alt="..." />
+      <div class="card-body">
+        <h5 class="card-title">Card title</h5>
+        <p class="card-text">
+          Some quick example text to build on the card title and make up the bulk of the
+          card's content.
+        </p>
+        <a href="#" class="btn btn-primary">Go somewhere</a>
+      </div>
+    </div>
+    <div class="card" style="width: 18rem;">
+  <img src="..." class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title">Card title</h5>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+  </div>
+</div>
+  </div>
+</template>
+<style scoped></style>
 
-
-
-
-
-
-
-
+https://bootstrap-vue.org
+.....................................................................................
 
 
