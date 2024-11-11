@@ -4737,17 +4737,448 @@ Build Blog post app using css.
 2.prepare body with card layout
 3.prepare footer.
 .....................................................................................
+.....................................................................................
+		 Slots- Component as Prop or DOM element as Prop
+.....................................................................................
+
+How to represent component inside template?
+
+<MyComponent/> - self closing
+  The component does not have any child
+
+<MyComponent>
+      You have to pass children
+</MyComponent>
+
+<Layout>
+   <Header>
+      <Logo/>
+   </Header>
+</Layout>
+
+In order to access element/component as prop inside child component vue offers
+built in component "slot" - Which is place holder where the elements to be inserted.
+
+Use case: DOM element as Prop
+..............................
+
+Parent Component;
+
+src/App.vue
+<script setup>
+import Child from './components/Child.vue'
+</script>
+
+<template>
+  <Child>
+    <!-- Passing dom element or other component as Child -->
+    <h1>Hello</h1>
+  </Child>
+</template>
+<style scoped>
+</style>
 
 
+Child Component
+
+src/components/Child.vue
+<script setup>
+</script>
+
+<template>
+  <div>
+      <slot></slot>
+  </div>
+</template>
+<style scoped>
+</style>
 
 
+Use case : Component as Prop:
+............................
 
 
+Parent Component
+src/App.vue
+<script setup>
+import Child from './components/Child.vue'
+import Greeter from './components/Greeter.vue'
+</script>
+<template>
+  <!-- Without passing any child -->
+  <!-- <Child /> -->
+  <Child>
+    <!-- component as prop or any dom element as prop -->
+    <h1>Hello</h1>
+    <p>this is slot</p>
+  </Child>
+
+  <Child>
+    <Greeter/>
+  </Child>
+</template>
+<style scoped></style>
+
+Child Components:
+src/components/Greeter.vue
+<script setup>
+ 
+</script>
+<template>
+    <h1>Greeter</h1>
+</template>
+
+src/components/Child.vue
+<script setup>
+</script>
+
+<template>
+  <div>
+      <slot></slot>
+  </div>
+</template>
+<style scoped>
+</style>
+
+.....................................................................................
+			 Fallback Content
+
+From the parent if pass component/dom element as child, that dom element or component 
+will be inserted, if you dont pass, then we can insert default dom element/component.
+
+Parent:
+src/App.vue
+<script setup>
+import Child from './components/Child.vue'
+</script>
+
+<template>
+  <Child>
+    <!-- Passing dom element or other component as Child -->
+    <h1>Hello</h1>
+  </Child>
+  <Child/>
+</template>
+<style scoped>
+</style>
+
+Child 
+src/components/Child.vue
+<script setup>
+
+</script>
+
+<template>
+  <h1>Child Component </h1>
+  <div>
+      <slot>
+        <h1>Fallback</h1>
+      </slot>
+  </div>
+</template>  
+<style scoped>
+</style>
+.....................................................................................
+			  Multi Slot
+.....................................................................................
+
+We can have more than one slot
+
+Without slot:
+
+<Layout>
+  <Header/>
+  <Body/>
+  <Footer/>
+</Layout>
+
+With slot:
+
+<Layout>
+   <Header>
+     
+   </Header>
+   <Body>
+      
+  </Body>
+   <Footer>
+     
+   </Footer>
+</Layout>
+
+Syntax For multi slot:
+
+Child Component
+<slot name="header"></slot>
+
+Parent Component:
+<template v-slot:header>
+  
+</template>
+
+.....................................................................................
 
 
+src/components/Layout.vue
+<script setup></script>
 
+<template>
+  <div>
+    <slot name="header">
+      <h1>Default Header</h1>
+    </slot>
+    <slot name="main">
+      <p>This is default Main</p>
+    </slot>
+    <slot name="footer">
+      <p>footer</p>
+    </slot>
+  </div>
+</template>
+<style scoped></style>
 
+src/App.vue
+<script setup>
+import Layout from "./components/Layout.vue";
+import Header from "./components/Header.vue";
+import Logo from "./components/Logo.vue";
+import Article from "./components/Articles.vue";
+</script>
 
+<template>
+  <Layout>
+    <template v-slot:header>
+      <Header>
+        <Logo />
+      </Header>
+    </template>
+    <template v-slot:main>
+      <Article />
+    </template>
+    <template v-slot:footer>
+      <footer>
+        <p>footer goest here</p>
+      </footer>
+    </template>
+  </Layout>
+</template>
+<style scoped></style>
+.....................................................................................
+			Without Using v-slot,We can use #Name
+....................................................................................
+
+with v-slot directive
+<template>
+  <Layout>
+    <template v-slot:header>
+      <Header>
+        <Logo />
+      </Header>
+    </template>
+    <template v-slot:main>
+      <Article />
+    </template>
+    <template v-slot:footer>
+      <footer>
+        <p>footer goest here</p>
+      </footer>
+    </template>
+  </Layout>
+</template>
+
+without v-slot directive
+<script setup>
+import Layout from "./components/Layout.vue";
+import Header from "./components/Header.vue";
+import Logo from "./components/Logo.vue";
+import Article from "./components/Articles.vue";
+</script>
+
+<template>
+  <Layout>
+    <template #header>
+      <Header>
+        <Logo />
+      </Header>
+    </template>
+    <template #main>
+      <Article />
+    </template>
+    <template #footer>
+      <footer>
+        <p>footer goes here</p>
+      </footer>
+    </template>
+  </Layout>
+</template>
+<style scoped></style>
+.....................................................................................
+			 Default Slots
+.....................................................................................
+
+The slot without name is called "default Slot"
+
+In Child Component:
+
+    <slot name="header">
+      <h1>Default Header</h1>
+    </slot>
+    <slot name="main">
+      <p>This is default Main</p>
+    </slot>
+    <slot name="footer">
+      <p>footer</p>
+    </slot>
+
+with Name
+  <slot name="header">
+      <h1>Default Header</h1>
+    </slot>
+without Name : Default slot
+   <slot>
+      <h1>Default Header</h1>
+    </slot>
+
+Note:
+ Only one slot can be default slot
+
+In the parent:
+
+ <template #default>
+ </template>
+
+.....................................................................................
+			 Default Slots
+.....................................................................................
+
+The slot without name is called "default Slot"
+
+In Child Component:
+
+    <slot name="header">
+      <h1>Default Header</h1>
+    </slot>
+    <slot name="main">
+      <p>This is default Main</p>
+    </slot>
+    <slot name="footer">
+      <p>footer</p>
+    </slot>
+
+with Name
+  <slot name="header">
+      <h1>Default Header</h1>
+    </slot>
+without Name : Default slot
+   <slot>
+      <h1>Default Header</h1>
+    </slot>
+
+Note:
+ Only one slot can be default slot
+
+Parent Component:
+src/App.vue
+<script setup>
+import Layout from "./components/Layout.vue";
+import Header from "./components/Header.vue";
+import Logo from "./components/Logo.vue";
+import Article from "./components/Articles.vue";
+</script>
+
+<template>
+  <Layout>
+    <template #default>
+      <Header>
+        <Logo />
+      </Header>
+    </template>
+    <template #main>
+      <Article />
+    </template>
+    <template #footer>
+      <footer>
+        <p>footer goes here</p>
+      </footer>
+    </template>
+  </Layout>
+</template>
+<style scoped></style>
+
+Child Component:
+
+src/components/Layout.vue
+<script setup></script>
+
+<template>
+  <div>
+    <slot>
+      <h1>Default Header</h1>
+    </slot>
+    <slot name="main">
+      <p>This is default Main</p>
+    </slot>
+    <slot name="footer">
+      <p>footer</p>
+    </slot>
+  </div>
+</template>
+<style scoped></style>
+
+.....................................................................................
+			   Dyamic slots
+.....................................................................................
+
+The slot name can be dynamic
+
+Static slot:
+
+<template v-slot:header>
+<template #header>
+
+.....................................................................................
+			   Dyamic slots
+.....................................................................................
+
+The slot name can be dynamic
+
+Static slot:
+
+<template v-slot:header>
+<template #header>
+
+Dynamic Slot:
+
+<script setup>
+import {ref} from 'vue'
+
+import Layout from "./components/Layout.vue";
+import Header from "./components/Header.vue";
+import Logo from "./components/Logo.vue";
+import Article from "./components/Articles.vue";
+
+const main = ref('main')
+
+</script>
+
+<template>
+  <Layout>
+    <template #default>
+      <Header>
+        <Logo />
+      </Header>
+    </template>
+    <template #[main]>
+      <Article />
+    </template>
+    <template #footer>
+      <footer>
+        <p>footer goes here</p>
+      </footer>
+    </template>
+  </Layout>
+</template>
+<style scoped></style>
 
 
 
