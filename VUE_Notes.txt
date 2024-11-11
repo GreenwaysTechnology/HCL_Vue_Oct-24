@@ -5179,7 +5179,319 @@ const main = ref('main')
   </Layout>
 </template>
 <style scoped></style>
+.....................................................................................
+			.....................................................................................
+			Slot Scope
+....................................................................................
+Slot scope enables data accessability for parent and child components.
 
+There are two slot scope
+
+1.Render scope
+2.scoped slots
+
+Render Scope:
+  Slot content has access to the data scope of the parent component, because it is defined in the parent component
+
+<span>{{message}}</span>
+
+<FancyButton>{{message}}</FancyButton>
+
+Here both {{message}} interploations will render the same content.
+
+Slot content does not have access the child component's data. Expressions in Vue templates can only access the scope it is defined in, consistent with js lexical scoping.
+
+     Experessions in the parent template only have access to the parent scope;
+		Expressions in the child template only have access in the 
+			  child template only
+
+
+	"As rule of thumb everthing in the template compiled in the parent scope;
+	 "everthing is compiled in the child template in the child scope".
+
+
+
+
+Scoped Slot:
+
+    if you want to access data in the parent and child scope.
+
+ "if parent component wants to access child state(data), the child component can pass data to the parent via "Slot" when rendering it".
+
+    "Slot can act as bridge between parent and child for data transfer"
+
+
+Child:
+<slot :firstName="name" :age="age" />
+
+
+eg
+Child Component:
+src/components/ScopeSlot.vue
+
+<script setup>
+import {ref} from 'vue'
+const message = ref('hello')
+</script>
+
+<template>
+ <slot :message="message"></slot>
+</template>  
+<style scoped>
+</style>
+
+src/App.vue
+<script setup>
+import ScopedSlot from './components/ScopeSlot.vue'
+</script>
+
+<template>
+  <ScopedSlot v-slot="slotProps">
+        {{slotProps.message}}
+  </ScopedSlot>
+</template>  
+<style scoped>
+</style>
+		...................................................................................
+			Dependency Injection:Composition API
+....................................................................................
+
+Prop Drilling:
+..............
+  When you pass data from the parent component to child, from child to its children and so on, at each level you have to pass props manually.
+
+ 			Root
+			  |
+			 props
+			  |
+			 Child1
+			   |
+			 Props
+                            |
+			 Child 2
+			   |
+			  props
+			 Child 3
+			   |
+			 props
+			   |
+			 Child N
+
+
+Parent:
+<script setup>
+import { ref } from "vue";
+import Child1 from "./components/Child1.vue";
+const message = ref("hello");
+</script>
+
+<template>
+  <Child1 :message="message" />
+</template>
+
+<style scoped></style>
+
+Child Components
+
+Child1
+src/components/Child1.vue
+<script setup>
+import Child2 from './Child2.vue'
+const props = defineProps(["message"]);
+
+</script>
+
+<template>
+    <Child2 :message="props.message"/>
+</template>
+
+<style scoped></style>
+
+Child2
+src/components/Child2.vue
+
+<script setup>
+import Child3 from './Child3.vue'
+const props = defineProps(["message"]);
+
+</script>
+
+<template>
+    <Child3 :message="props.message"/>
+</template>
+
+<style scoped></style>
+
+
+Child 3
+src/components/Child3.vue
+<script setup>
+const props = defineProps(["message"]);
+
+</script>
+
+<template>
+    <h1>{{props.message}}</h1>
+</template>
+
+<style scoped></style>
+
+Parent:
+
+src/<script setup>
+import { ref, provide } from "vue";
+
+import Child1 from "./components/Child1.vue";
+const message = ref("hello");
+provide("greeting", message);
+</script>
+
+<template>
+  <Child1 :message="message" />
+</template>
+
+<style scoped></style>
+
+
+Child 
+src/components/Child3.vue
+<script setup>
+import { inject } from "vue";
+const props = defineProps(["message"]);
+const greeting = inject("greeting");
+</script>
+
+<template>
+  <h1>{{ props.message }}</h1>
+  <h1>From provider {{ greeting }}</h1>
+</template>
+
+<style scoped></style>
+
+.....................................................................................
+		 How to pass multiple properties via provide
+
+
+Parent
+src/App.vue
+<script setup>
+import { ref, provide } from "vue";
+
+import Child1 from "./components/Child1.vue";
+const message = ref("hello");
+provide("greeting", message);
+provide("welcome", "welcome");
+</script>
+
+<template>
+  <Child1 :message="message" />
+</template>
+
+<style scoped></style>
+
+
+src/components/Child3.vue
+<script setup>
+import { inject } from "vue";
+const props = defineProps(["message"]);
+const greeting = inject("greeting");
+const welcome = inject("welcome")
+</script>
+
+<template>
+  <h1>{{ props.message }}</h1>
+  <h1>{{ greeting }} {{welcome}}</h1>
+</template>
+
+<style scoped></style>
+.............................********................................................
+.............................********................................................
+			Default Value
+
+What if i dont provide value?
+
+inject("key","defaultValue")
+
+src/components/Child3.vue
+
+<script setup>
+import { inject } from "vue";
+const props = defineProps(["message"]);
+const greeting = inject("greeting");
+const welcome = inject("welcome","Default")
+</script>
+
+<template>
+  <h1>{{ props.message }}</h1>
+  <h1>{{ greeting }} {{welcome}}</h1>
+</template>
+
+<style scoped></style>
+.....................................................................................
+			Global Data sharing
+		      (App Level Data Sharing)
+....................................................................................
+
+if you want to share data , across the application, using provide function we can 
+with help of application object.
+
+main.js
+// import './assets/main.css'
+
+import { createApp } from 'vue'
+import App from './App.vue'
+
+createApp(App).provide('companyName','IBM').mount('#app')
+
+src/components/Child3.vue
+<script setup>
+import { inject } from "vue";
+const props = defineProps(["message"]);
+const greeting = inject("greeting");
+const welcome = inject("welcome", "Default");
+const company = inject("companyName");
+</script>
+
+<template>
+  <h1>{{ props.message }}</h1>
+  <h1>{{ greeting }} {{ welcome }} {{company}}</h1>
+</template>
+
+<style scoped></style>
+
+.....................................................................................
+			 Component Life Cycles
+.....................................................................................
+.....................................................................................
+			 Component Life Cycles
+.....................................................................................
+
+<script setup>
+import { onBeforeMount, onMounted, onBeforeUpdate, onUpdated, ref } from "vue";
+
+const counter = ref(0);
+
+onBeforeMount(() => {
+  console.log("onBeforeMount is called");
+});
+
+onMounted(() => {
+  console.log("onMounted is called");
+});
+
+onBeforeUpdate(() => {
+  console.log("onBeforeUpdate is called");
+});
+onUpdated(() => {
+  console.log("OnUpdated is called")
+})
+</script>
+
+<template>
+  <h1>Life Cycles</h1>
+  <button @click="counter++">{{ counter }}</button>
+</template>
+<style scoped></style>
 
 
 
