@@ -4400,5 +4400,358 @@ npm i bootstrap@5.3.3
 
 https://bootstrap-vue.org
 .....................................................................................
+.....................................................................................
+			      Component Speficic Styles
+.....................................................................................
+....................................................................................
+			       Fall Through Attributes
+	     (Sending HTML Attributes from the parent Component to Child Component)
+.....................................................................................
+
+Attribute inheritance:
+......................
+
+  A Fall through attribute is an attribute or v-on listeners that is passed to component but it is not explicitly declared in the receiving components(child components) via props or emits.  
+
+  Properties which are inhierted from the parent component to child component 
+  "class, style, and id attributes."
+
+.....................................................................................
+			      Component Speficic Styles
+.....................................................................................
+....................................................................................
+			       Fall Through Attributes
+	     (Sending HTML Attributes from the parent Component to Child Component)
+.....................................................................................
+
+Attribute inheritance:
+......................
+
+  A Fall through attribute is an attribute or v-on listeners that is passed to component but it is not explicitly declared in the receiving components(child components) via props or emits.  
+
+  Properties which are inhierted from the parent component to child component 
+  "class, style, and id attributes."
+
+Parent: App.vue
+<script setup>
+import MyButton from "./components/MyButton.vue";
+</script>
+<template>
+  <div class="container">
+    <h1>Parent Component</h1>
+    <!-- sending html attribute as prop: Fallthrough attributes -->
+    <MyButton class="fancy-btn" />
+    <br />
+    <div style="margin:10px;10px;10px;10px">
+      <button class="fancy-btn">Parent</button>
+    </div>
+  </div>
+</template>
+<style>
+.fancy-btn {
+  background-color: #4caf50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline;
+  font-size: 16px;
+}
+</style>
+
+
+child:
+src/components/MyButton.vue
+<script setup></script>
+<template>
+   <button>Click</button>
+</template>
+<style></style>
+.....................................................................................
+....................................................................................
+ How to access the attributes passed from parent in the child compoent
+
+Two places:
+
+1.inside template
+2.inside script block
+
+....................................................................................
+ How to access the attributes passed from parent in the child compoent
+
+Two places:
+
+1.inside template
+2.inside script block
+
+using Options Api or setup
+<script>
+export default {
+    created(){
+        console.log(this.$attrs)
+    }
+}
+</script>
+
+using setup attribute 
+
+<script setup>
+import { useAttrs } from 'vue'
+const attrs = useAttrs()
+</script>
+
+<script setup>
+const props = defineProps(['title'])
+</script>
+<template>
+    <button>{{props.title}}</button>
+    <div>{{$attrs}}</div>
+</template>
+<style>
+
+</style>
+.................................................................................
+		Can we override the dom attributes in the child component
+...................................................................................
+Yes possible except css properties by default
+
+in the style we need add attribute in the style tag scoped
+
+<script>
+export default {
+    created(){
+        console.log(this.$attrs)
+    }
+}
+</script>
+
+<script setup>
+const props = defineProps(['title'])
+</script>
+<template>
+    <button>{{props.title}}</button>
+     <!-- <div>{{$attrs}}</div> -->
+</template>
+<style scoped>
+.fancy-btn {
+    color:red
+}
+</style>
+.....................................................................................
+			Can we add new "class" to the component
+
+yes,We can
+
+When add new classes , the new css classes to be merged as part of old css.
+
+<script>
+export default {
+    created(){
+        console.log(this.$attrs)
+    }
+}
+</script>
+<script setup>
+import { useAttrs } from "vue";
+const attrs = useAttrs();
+
+console.log(attrs.class);
+</script>
+<template>
+  <button class="large">Click</button>
+</template>
+<style scoped>
+.fancy-btn {
+  color: red;
+}
+.large {
+  font-family: "Gill Sans Extrabold", sans-serif;
+  font-weight: bold;
+}
+</style>
+
+
+output:
+<button class="large fancy-btn" data-v-960f1381="">Click</button>
+..................................................................................
+			How to prevent Attribute inheritance
+..................................................................................
+yes we can.
+
+<script>
+export default {
+  created() {
+    console.log(this.$attrs);
+  },
+//   inheritAttrs: false,
+};
+</script>
+<script setup>
+import { useAttrs } from "vue";
+const attrs = useAttrs();
+
+console.log(attrs.class);
+</script>
+<template>
+  <button class="large">Click</button>
+</template>
+<style scoped>
+.fancy-btn {
+  color: red;
+}
+.large {
+  font-family: "Gill Sans Extrabold", sans-serif;
+  font-weight: bold;
+}
+</style>
+...................................................................................
+...................................................................................
+		 Dynamic css -Based on State if want to change the style
+..................................................................................
+
+<script setup>
+import { ref } from "vue";
+const isActive = ref(true);
+
+const toggle = () => {
+  isActive.value = !isActive.value;
+};
+</script>
+
+<template>
+  <!-- <div class="active">
+    <h1>Hello</h1>
+  </div> -->
+  <div :class="{ active: isActive }">
+    <h1>Hello</h1>
+  </div>
+  <button @click="toggle">Toggle</button>
+</template>
+
+<style scoped>
+.active {
+  color: blue;
+}
+</style>
+....................................................................................
+<script setup>
+import { ref } from 'vue';
+
+const isActive = ref(true)
+const zoom = ref(true);
+
+const toogle = () => {
+    isActive.value = !isActive.value
+    zoom.value = !zoom.value;
+}
+</script>
+<template>
+    <!-- Static Css -->
+    <!-- <div class="active">
+   <h1>Hello</h1>
+</div> -->
+    <!-- <div :class="{ active: isActive }">
+        <h1>Hello</h1>
+    </div> -->
+    <div :class="{ active: isActive, zoom: zoom }">
+        <h1>Hello</h1>
+    </div>
+    <button @click="toogle">Toggle</button>
+</template>
+<style scoped>
+.active {
+    color: blue
+}
+
+.zoom {
+    font-size: 50px;
+}
+</style>
+....................................................................................
+....................................................................................
+			Multiple styles in dynamic css
+
+
+<script setup>
+import { ref } from "vue";
+const isActive = ref(true);
+const zoom = ref(true);
+const toggle = () => {
+  isActive.value = !isActive.value;
+  zoom.value = !zoom.value;
+};
+</script>
+
+<template>
+  <!-- <div class="active">
+    <h1>Hello</h1>
+  </div> -->
+  <!-- <div :class="{ active: isActive }">
+    <h1>Hello</h1>
+  </div> -->
+  <div :class="{ active: isActive, zoom: zoom }">
+    <h1>Hello</h1>
+  </div>
+  <button @click="toggle">Toggle</button>
+</template>
+
+<style scoped>
+.active {
+  color: blue;
+}
+.zoom {
+  font-size: 50px;
+}
+</style>
+....................................................................................
+			 dynamic "style" attribute
+
+<script setup>
+import { ref } from "vue";
+const fontSize = ref(10);
+const activeColor = ref("red");
+
+const increment = () => {
+  fontSize.value += 2;
+};
+</script>
+<template>
+  <!-- <div style="font-size:20px;">
+     <h1>Hello</h1>
+  </div> -->
+
+  <div :style="{ 'font-size': fontSize + 'px', color: activeColor }">
+    <h1>Hello</h1>
+  </div>
+  <button @click="increment">zoom</button>
+</template>
+<style></style>
+.....................................................................................
+
+Task:
+
+Build Blog post app using css.
+
+1.Prepare header
+2.prepare body with card layout
+3.prepare footer.
+.....................................................................................
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

@@ -1,30 +1,20 @@
-<script>
+<script setup>
+import { ref } from "vue";
+const fontSize = ref(10);
+const activeColor = ref("red");
+
+const increment = () => {
+    fontSize.value += 2;
+};
 </script>
 <template>
-  <div class="container py-4 px-3 mx-auto">
-    <h1>Build Bootstrap with Vue</h1>
-    <article>
-      <p style="color:red">This is article</p>
-    </article>
-    <div class="card" style="width: 18rem">
-      <img src="..." class="card-img-top" alt="..." />
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">
-          Some quick example text to build on the card title and make up the bulk of the
-          card's content.
-        </p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-      </div>
+    <div style="font-size:20px;">
+        <h1>Hello</h1>
     </div>
-    <div class="card" style="width: 18rem;">
-      <img src="..." class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-          content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-      </div>
+
+    <div :style="{ 'font-size': fontSize + 'px', color: activeColor }">
+        <h1>Hello</h1>
     </div>
-  </div>
+    <button @click="increment">zoom</button>
 </template>
+<style></style>
