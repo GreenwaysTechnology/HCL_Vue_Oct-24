@@ -5577,6 +5577,181 @@ onMounted(() => {
 </template>
 <style scoped></style>
 .....................................................................................
+.....................................................................................
+		How to isloate the ajax logic using composables
+.....................................................................................
+What is a "Composable"?
+
+In the context of Vue applications, a "composable" is a function that leverages Vue's Composition API to encapsulate and reuse stateful logic.
+
+When building frontend applications, we often need to reuse logic for common tasks. For example, we may need to format dates in many places, so we extract a reusable function for that. 
+
+This formatter function encapsulates stateless logic: it takes some input and immediately returns expected output. There are many libraries out there for reusing stateless logic
+
+Mouse Tracker Example:
+
+ i want to track the mouse x and y location across the application
+
+
+Use case: Mouse Tracking feature within component
+
+
+<script setup>
+import { onMounted, onUnmounted, ref } from 'vue';
+const x = ref(0)
+const y = ref(0)
+
+function update(event) {
+  x.value = event.pageX
+  y.value = event.pageY
+}
+
+onMounted(() => {
+  window.addEventListener('mousemove', update)
+})
+onUnmounted(() => {
+  window.removeEventListener('mousemove', update)
+})
+</script>
+<template>
+  <div>
+    <h1>X:{{ x }} Y: {{ y }}</h1>
+  </div>
+</template>
+
+What if i want to resue the same logic in multiple components? we can extract the logic into an external file which is called composable function
+..............
+
+src/composables/useMouse.js
+import { onMounted, onUnmounted, ref } from 'vue';
+
+function useMouse() {
+    const x = ref(0)
+    const y = ref(0)
+
+    function update(event) {
+        x.value = event.pageX
+        y.value = event.pageY
+    }
+    onMounted(() => {
+        window.addEventListener('mousemove', update)
+    })
+    onUnmounted(() => {
+        window.removeEventListener('mousemove', update)
+    })
+    //return composable values;it can be variables,functions,objects
+    return {
+        x,
+        y
+    }
+}
+export { useMouse }
+
+src/App.vue
+<script setup>
+import { useMouse } from './composables/useMouse';
+const { x, y } = useMouse()
+</script>
+<template>
+    <div>
+        <h1>X:{{ x }} Y: {{ y }}</h1>
+    </div>
+</template>
+.....................................................................................
+		Breaking into composables into another composables
+
+
+From the above example we can isloate listener coe into another composables
+
+
+src/composable/useEvent.js
+
+import { onMounted,  onUnmounted } from "vue";
+
+export function useEventListener(target, event, callback) {
+    onMounted(() => {
+        target.addEventListener(event, callback)
+    })
+    onUnmounted(() => {
+        target.removeEventListener(event, callback)
+    })
+}
+src/composables/useMouse.js
+import {ref } from 'vue';
+import { useEventListener } from './useEvent';
+
+function useMouse() {
+    const x = ref(0)
+    const y = ref(0)
+    useEventListener(window, 'mousemove', (event) => {
+        x.value = event.pageX
+        y.value = event.pageY
+    })
+    //return composable values;it can be variables,functions,objects
+    return {
+        x,
+        y
+    }
+}
+export { useMouse }
+.....................................................................................
+			API Calls and composables
+....................................................................................
+
+src/composables/useFetch.js
+import { onMounted, ref } from "vue";
+
+function useFetch(url) {
+    const data = ref(null)
+    const error = ref(null)
+    //write function to fecth data
+    async function fetchAlbums() {
+        try {
+            const response = await fetch(url);
+            const albums = await response.json();
+            data.value = albums;
+        } catch (err) {
+            console.log(err);
+            error.value = err;
+        }
+    }
+
+    //api calls must be done inside onmount
+    onMounted(() => {
+        fetchAlbums();
+    });
+    return {
+        data, error
+    }
+}
+
+export { useFetch }
+
+src/App.vue
+<script setup>
+import { useFetch } from "./composables/useFetch";
+const url = "https://jsonplaceholder.typicode.com/albums";
+const { data, error } = useFetch(url);
+
+</script>
+<template>
+    <div>
+        <h1>Albums</h1>
+        <div v-if="error">
+            <h1>Oops! {{ error.message }}</h1>
+        </div>
+        <div v-else-if="data">
+            <div v-for="album of data">
+                <h3>{{ album.title }}</h3>
+            </div>
+        </div>
+        <div v-else>
+            <h1>Loading....</h1>
+        </div>
+    </div>
+</template>
+
+<style scoped></style>
 
 
 
