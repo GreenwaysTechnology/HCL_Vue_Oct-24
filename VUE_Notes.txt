@@ -5752,6 +5752,245 @@ const { data, error } = useFetch(url);
 </template>
 
 <style scoped></style>
+....................................................................................				Third party composables
+
+https://vueuse.org/
+
+You can thrid party composable utilities in this web site.
+...................................................................................
+				Watchers
+...................................................................................
+
+What is Watcher?
+   Watcher is a function, which allows us to monitor an application state and trigger actions based on these changes.
+   Watchers that allows us to observe some data and perform specific actions when it changes.
+   It is more generic way to observe and react to data changes in the vue instance.
+
+ With watchers, we are not just able to watch a property and perform custom actions, we can also access the old value that is particular property is changing from, as well as the new value that it has changed to.
+
+Watchers in Options api:
+<script>
+export default {
+    data() {
+        return {
+            counter: 0
+        }
+    },
+    watch: {
+        counter(newValue, oldValue) {
+            console.log('oldValue=>', oldValue, 'newValue=>', newValue)
+        }
+    }
+}
+</script>
+<template>
+    <h1>Counter {{counter }}</h1>
+    <button @click="counter++">+</button>
+</template>
+<style></style>
+
+....................................................................................
+			Watchers in Composition Api using Setup function
+.....................................................................................
+<script>
+import { ref, watch } from 'vue';
+
+export default {
+    setup() {
+        const counter = ref(0)
+        //watchers
+        watch(counter, (newValue, oldValue) => {
+            console.log('oldValue=>', oldValue, 'newValue=>', newValue)
+        })
+
+        return {
+            counter
+        }
+    }
+}
+</script>
+<template>
+    <h1>Counter {{ counter }}</h1>
+    <button @click="counter++">+</button>
+</template>
+<style></style>
+
+....................................................................................
+		Watchers in Composition Api using Setup attribute
+.....................................................................................
+<script setup>
+import { ref, watch } from 'vue';
+const counter = ref(0)
+//watchers
+watch(counter, (newValue, oldValue) => {
+    console.log('oldValue=>', oldValue, 'newValue=>', newValue)
+})
+</script>
+<template>
+    <h1>Counter {{ counter }}</h1>
+    <button @click="counter++">+</button>
+</template>
+<style></style>
+....................................................................................
+			 Object Properties and Watchers
+....................................................................................
+Watchers will trigger only when data is changed, meaning once the user starts interact or if any changes are deducted.
+
+we may want to perform certain actions with initial value of the property we are watching for our app might require that we send an API request with inital data and then repeat the process if the data changes.
+
+watch(comments, (newValue, oldValue) => {
+    console.log('oldValue=>', oldValue)
+    console.log('newValue=>', newValue)
+ }, {
+    // deep: true
+    immediate: true
+})
+
+
+<script setup>
+import { reactive, watch } from 'vue';
+
+const comments = reactive({
+    like: 0, dislike: 0, recommend: {
+        rating: {
+            value: 0
+        }
+    }
+})
+//watchers which watches all properties including ensted property
+// watch(comments, (newValue, oldValue) => {
+//     console.log('oldValue=>', oldValue, 'newValue=>', newValue)
+//     console.log('old value=>', oldValue.recommend.rating.value)
+//     console.log('new value=>', newValue.recommend.rating.value)
+
+// })
+//watchers which watches disable inner property changes
+
+watch(comments, (newValue, oldValue) => {
+    console.log('oldValue=>', oldValue)
+    console.log('newValue=>', newValue)
+  
+}, {
+    // deep: true
+    immediate: true
+})
+</script>
+<template>
+    <h1>Reactive State with Watchers</h1>
+    <h1>Like : {{ comments.like }} Dislike {{ comments.dislike }} Rating Value {{ comments.recommend.rating.value }}</h1>
+    <button @click="comments.like++">Like</button>
+    <button @click="comments.dislike++">Dislike</button>
+    <button @click="comments.recommend.rating.value++">Rating</button>
+</template>
+<style></style>
+....................................................................................
+....................................................................................
+			watch is simpilifed with "watchEffect" api
+.....................................................................................
+<script setup>
+import { ref, watch, watchEffect } from 'vue';
+
+const counter = ref(0)
+// //watchers
+// watch(counter, (newValue, oldValue) => {
+//     console.log('oldValue=>', oldValue, 'newValue=>', newValue)
+// })
+watchEffect(() => {
+    console.log('Watcher => ', counter.value)
+})
+</script>
+<template>
+    <h1>Counter {{ counter }}</h1>
+    <button @click="counter++">+</button>
+</template>
+<style></style>
+
+....................................................................................
+			 Watchers in Real time
+...................................................................................
+
+Real time conversion
+Real data fetch.....
+
+<script setup>
+import { ref, watch } from 'vue';
+
+const tmpCelsius = ref(0)
+const tmpFarenheit = ref(0)
+
+watch(tmpCelsius, newValue => {
+    tmpFarenheit.value = Math.round((newValue * 9) / 5 + 32)
+})
+
+</script>
+<template>
+    <h1>TmpCelsius: {{tmpCelsius}} TmpFarenheit {{ tmpFarenheit }}</h1>
+    <button @click="tmpCelsius+=3">TmpFarenheit</button>
+</template>
+<style></style>
+.....................................................................................
+			Plugins
+.....................................................................................
+What is plugin?
+
+ Plugins are self contained code that usuallay add app-top level functionality to Vue.
+Most of third party libs are integrated as plugin with vue echo system eg: Vue-router
+Statement management libs like vuex,Pinia.
+
+Plugins are distribtued as npm modules, in order to use plugins, we have to do two things
+
+1.install plugin as npm module
+
+ npm install pluginPackage
+
+2.Integrate Plugin with application Object
+
+const app = createApp(App)
+
+app.components()
+app.provide()
+
+//plugin
+app.use(MyPlugin)
+app.use(router)
+app.use(pina)
+
+How to write custom plugin?
+
+export const myPlugin = {
+    install(app, options) {
+        //application object referenced in the plugin as first parameter
+        app.config.globalProperties.$uppercase = key => {
+            return key.toUpperCase()
+        }
+    }
+}
+
+Step 2: register the plugin in application object
+
+import './assets/main.css'
+
+import { createApp } from 'vue'
+import App from './App.vue'
+import { myPlugin } from './plugins/myPlugin'
+
+const app = createApp(App)
+app.use(myPlugin)
+app.mount('#app')
+
+Step 3: Use the plugin functionality inside app
+
+<script setup>
+
+</script>
+<template>
+  <h1>{{ $uppercase('hello, how are') }}</h1>
+</template>
+.....................................................................................
+
+
+
+
 
 
 
