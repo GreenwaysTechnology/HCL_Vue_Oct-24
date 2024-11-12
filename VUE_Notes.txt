@@ -5928,6 +5928,98 @@ watch(tmpCelsius, newValue => {
     <button @click="tmpCelsius+=3">TmpFarenheit</button>
 </template>
 <style></style>
+	
+.....................................................................................
+				Custom Directives
+.....................................................................................
+
+Code Reuse in Vue:
+
+The application code can be reused in vue in various ways.
+
+1.Composables
+   Way to reuse app state logic
+2.Components
+   Way to resue UI 
+3.Directives 
+   Way to resue underlaying dom features
+
+
+There are different types of directives 
+
+1.built in directives
+   Directives are provided by vue - v-on,v-bind....
+2.custom directives
+
+
+How to create simple custom Directive?
+
+Directive is object, having low level dom features.
+
+Steps:
+
+1.create directive object as part of any component.
+
+<script setup>
+//first directive
+const vFocus = {
+  //define life cycle method
+  mounted: (element) => {
+   
+  },
+}
+</script>
+<template>
+  
+</template>
+
+2.Attach directive on html element
+
+<script setup>
+//first directive vBind,vIf -  v-bind , v-if
+const vFocus = {
+  //define life cycle method
+  mounted: (element) => {
+    console.log('vFocus directive')
+    console.log(element)
+    element.focus()
+  },
+}
+</script>
+<template>
+  <input v-focus />
+</template>
+.....................................................................................
+			  More dom maniuplation
+....................................................................................
+<script setup>
+const VHighlight = {
+    mounted: (element) => {
+        //add event listener
+        element.addEventListener('mousemove', (evt) => {
+            //  element.style.backgroundColor = 'yellow'
+            highLight('yellow')
+        })
+        element.addEventListener('mouseleave', (evt) => {
+            //element.style.backgroundColor = null
+            highLight(null)
+        })
+        const highLight = (color) => {
+            element.style.backgroundColor = color
+        }
+    }
+}
+</script>
+<template>
+    <h1 v-highlight>Touch Me</h1>
+</template>
+
+
+
+
+
+
+
 .....................................................................................
 			Plugins
 .....................................................................................
