@@ -5179,7 +5179,6 @@ const main = ref('main')
   </Layout>
 </template>
 <style scoped></style>
-.....................................................................................
 			.....................................................................................
 			Slot Scope
 ....................................................................................
@@ -5260,7 +5259,7 @@ Prop Drilling:
 ..............
   When you pass data from the parent component to child, from child to its children and so on, at each level you have to pass props manually.
 
- 			Root
+ 			 Root
 			  |
 			 props
 			  |
@@ -5462,9 +5461,6 @@ const company = inject("companyName");
 .....................................................................................
 			 Component Life Cycles
 .....................................................................................
-.....................................................................................
-			 Component Life Cycles
-.....................................................................................
 
 <script setup>
 import { onBeforeMount, onMounted, onBeforeUpdate, onUpdated, ref } from "vue";
@@ -5492,6 +5488,95 @@ onUpdated(() => {
   <button @click="counter++">{{ counter }}</button>
 </template>
 <style scoped></style>
+.....................................................................................
+			API Calls
+.....................................................................................
+
+1.You can write api calls within component
+2.YOu can write api call outside component using "Composables"
+3.You can write api call outside component using State management libs -Pina
+
+Conditional Rendering:
+Using v-if,v-else,v-if...v-else-if
+
+<div v-if="condtion">
+  this block of code to be executed
+</div>
+<div v-else>
+  this block of code to be executed
+</div>
+
+else-if
+
+<div v-if="condtion">
+  this block of code to be executed
+</div>
+<div v-else-if="condition">
+  this block of code to be executed
+</div>
+<div v-else>
+  this block of code to be executed
+</div>
+
+When you make api call there is three conditions
+
+1.data may be available on time.
+2.data may come slowly
+3.error may come
+
+in order to make api call, in js we use "Ajax" libs..
+
+Vue has no any opinion to use ajax lib, you can use any ajax lib.
+
+There are many libs available but most popular are two
+
+1.axios - third party lib
+2.fetch - native browser lib/api
+
+<script setup>
+import { onMounted, reactive } from 'vue';
+const state = reactive({
+  data: null,
+  error: null
+})
+async function fetchAlbums() {
+  try {
+    const url = 'https://jsonplaceholder.typicode.com/albums'
+    const response = await fetch(url)
+    const albums = await response.json()
+    console.log(albums)
+    state.data = albums
+  }
+  catch (err) {
+    console.log(err)
+    state.error = err
+  }
+}
+
+onMounted(() => {
+  //you have to write api call 
+  fetchAlbums()
+})
+</script>
+<template>
+  <div>
+    <div v-if="state.error">
+      <h1>Opps! {{ state.error.message }}</h1>
+    </div>
+    <div v-else-if="state.data">
+      <!-- show the data -->
+      <div v-for="album of state.data">
+        <h3>{{ album.title }}</h3>
+      </div>
+    </div>
+    <div v-else>
+      <!-- Show progress bar -->
+      <h1>Loading...</h1>
+    </div>
+  </div>
+</template>
+<style scoped></style>
+.....................................................................................
 
 
 
