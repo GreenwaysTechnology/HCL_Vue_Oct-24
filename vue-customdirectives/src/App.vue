@@ -1,21 +1,9 @@
 <script setup>
-const VHighlight = {
-    mounted: (element) => {
-        //add event listener
-        element.addEventListener('mousemove', (evt) => {
-            //  element.style.backgroundColor = 'yellow'
-            highLight('yellow')
-        })
-        element.addEventListener('mouseleave', (evt) => {
-            //element.style.backgroundColor = null
-            highLight(null)
-        })
-        const highLight = (color) => {
-            element.style.backgroundColor = color
-        }
-    }
-}
+import { ref } from 'vue';
+
+const color = ref('green')
 </script>
 <template>
-    <h1 v-highlight>Touch Me</h1>
+    <input v-focus/>
+    <div v-highlight.value="color">TouchMe</div>
 </template>
