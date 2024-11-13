@@ -6667,6 +6667,36 @@ button:disabled {
     cursor: not-allowed;
 }
 </style>
+	.....................................................................................
+			  Template Ref
+....................................................................................
+		
+How to access dom element in Vue?
+ Inside component : event object
+ Inside Template  : ref keyword.
+
+syntax:
+ <input ref="variable">
+
+ref is attribute is used to access dom element or child component instance after it is mounted.
+
+ref ,can be used inside "onMounted" life cycle api.
+
+Use cases:
+1.in order to access dom elements directly
+2.in order to integrate third party libs.
+
+<script setup>
+import { onMounted, ref } from 'vue';
+const myinput = ref(null)
+onMounted(()=>{
+   // console.log(myinput.value)
+   myinput.value.focus()
+})
+</script>
+<template>
+    <input ref="myinput" />
+</template>
 
 
 .....................................................................................
@@ -6728,13 +6758,256 @@ Step 3: Use the plugin functionality inside app
   <h1>{{ $uppercase('hello, how are') }}</h1>
 </template>
 .....................................................................................
+			State Management Libs - Pinia
+....................................................................................
+
+What is Pinia?
+ State management lib for managing state and its life cycle of vue application.
+
+Pinia is written for "Vue 3 Composition API model and Composable Style",unlike VueX which is another statemanagement lib for vue 2, which is written imperative style.
+
+Pinia can work with any versions,mostly recommended for vue 3 projects.
+
+Pinia Core Concepts:
+
+1.State
+2.Store
+3.Actions
+4.Getters
+
+State:
+  It represents the application data
+  Which is centeral part of app/store
+
+Store:
+  Object which encapsulate component's (state,actions (computed), the state inside store is reactive
+
+Actions:
+ Object which encapsulate components behaviour(methods)
+
+Getters:
+ Object which encapsulate components computed Properties
+
+Store = {state + actions + getters}
 
 
+Pinia is distributed as plugin in vue echo system...so we need to install pinia and we have integrate with application object
+
+npm i pinia
+
+main.js
+
+ createApp(App).use(createPinia())
+
+When you create project itself you can integrate pinia.
 
 
+G:\HCL>npm init vue@latest
+
+> npx
+> create-vue
 
 
+Vue.js - The Progressive JavaScript Framework
+
+√ Project name: ... vue-pinia
+√ Add TypeScript? ... No / Yes
+√ Add JSX Support? ... No / Yes
+√ Add Vue Router for Single Page Application development? ... No / Yes
+√ Add Pinia for state management? ... No / Yes - Yes
+√ Add Vitest for Unit Testing? ... No / Yes
+√ Add an End-to-End Testing Solution? » No
+√ Add ESLint for code quality? » No
+
+Scaffolding project in G:\HCL\vue-pinia...
+
+Done. Now run:
+
+  cd vue-pinia
+  npm install
+  npm run dev
+
+.....................................................................................
+
+Use case: State mutation with in component
+
+<script setup>
+import { ref } from "vue";
+const counter = ref(0)
+</script>
+<template>
+  <div>
+    <h1>Counter : {{ counter }}</h1>
+    <button @click="counter++">+</button>
+  </div>
+</template>
+
+Use case: State Mutation outiside component using Pinia
 
 
+steps:
+1.create store
+src/stores/counter.js
+
+Options Api Style:
+1.1.State Declaration
+import { defineStore } from "pinia"
+
+const useCounterStore = defineStore('counter', {
+    //state declaration
+    state: () => {
+        //return reactive state
+        return {
+            counter: 0
+        }
+    }
+});
 
 
+export { useCounterStore }
+
+1.2. Bind State in UI
+
+<script setup>
+import { useCounterStore } from './stores/counter.js'
+const counter = useCounterStore()
+</script>
+<template>
+    <div>
+        <h1>Counter : {{counter.count}}</h1>
+    </div>
+</template>
+
+2.Add biz logic : actions
+import { defineStore } from "pinia"
+
+const useCounterStore = defineStore('counter', {
+    //state declaration
+    state: () => {
+        //return reactive state
+        return {
+            count: 0
+        }
+    },
+    actions: {
+        increment() {
+            this.count++
+        }
+    }
+});
+
+
+export { useCounterStore }
+
+2.1.Invoke biz logic from the UI
+<script setup>
+import { useCounterStore } from './stores/counter.js'
+const counter = useCounterStore()
+</script>
+<template>
+    <div>
+        <h1>Counter : {{ counter.count }}</h1>
+        <button @click="counter.increment">+</button>
+    </div>
+</template>
+
+...................................................................................
+			  Getters - computed Properties
+....................................................................................
+
+import { defineStore } from "pinia"
+
+const useCounterStore = defineStore('counter', {
+    //state declaration
+    state: () => {
+        //return reactive state
+        return {
+            count: 0
+        }
+    },
+    actions: {
+        increment() {
+            this.count++
+        }
+    },
+    getters: {
+        doubleIt: state => state.count * 2
+    }
+});
+
+
+export { useCounterStore }
+
+<script setup>
+import { useCounterStore } from './stores/counter.js'
+const counter = useCounterStore()
+</script>
+<template>
+    <div>
+        <h1>Counter : {{ counter.count }} Double Counter: {{ counter.doubleIt }}</h1>
+        <button @click="counter.increment">+</button>
+    </div>
+</template>
+....................................................................................
+			API calls and Pinia
+////////////////////////////////////////////////////////////////////////////////////
+
+import { defineStore } from "pinia";
+
+export const useTodosStore = defineStore('todos', {
+    state: () => {
+        return {
+            todos: [],
+            error: null
+        }
+    },
+    actions: {
+        //async 
+        async fetchTodos() {
+            try {
+                const response = await fetch('https://jsonplaceholder.typicode.com/todos')
+                const todos = await response.json()
+                this.todos = todos
+            }
+            catch (err) {
+                this.error = err
+            }
+        }
+    },
+    getters: {
+        todosList: state => state.todos
+    }
+
+})
+
+import { defineStore } from "pinia";
+
+export const useTodosStore = defineStore('todos', {
+    state: () => {
+        return {
+            todos: [],
+            error: null
+        }
+    },
+    actions: {
+        //async 
+        async fetchTodos() {
+            try {
+                const response = await fetch('https://jsonplaceholder.typicode.com/todos')
+                const todos = await response.json()
+                this.todos = todos
+            }
+            catch (err) {
+                this.error = err
+                console.log(err)
+            }
+        }
+    },
+    getters: {
+        todosList: state => state.todos
+    }
+
+})
+...................................................................................
+			Composition API
+...................................................................................
