@@ -1,15 +1,12 @@
 <script setup>
-import { onMounted } from 'vue'
-import { useTodosStore } from './stores/todos.js'
-
-const todosStore = useTodosStore()
-onMounted(() => {
-    todosStore.fetchTodos()
-})
+import { useCounterStore } from "./stores/counter.js";
+const counterStore = useCounterStore()
 </script>
+
 <template>
-    <h1>Todo App with Pinia</h1>
-    <div v-for="todo in todosStore.todosList">
-        <h2>{{ todo.title }}</h2>
-    </div>
+ <h1>Counter App Using Pinia</h1>
+ <h3>Value : {{counterStore.count}} {{counterStore.doubleIt}}</h3>
+ <button @click="counterStore.increment">+</button>
 </template>
+
+<style scoped></style>

@@ -7011,3 +7011,42 @@ export const useTodosStore = defineStore('todos', {
 ...................................................................................
 			Composition API
 ...................................................................................
+
+import { defineStore } from "pinia";
+import { ref } from 'vue'
+//composition api
+export const useCounterStore = defineStore('counter', () => {
+    //state declaration
+    const count = ref(0)
+    //biz logic 
+    function increment() {
+        count.value++
+    }
+    function decrement() {
+        count.value--
+    }
+    //computed properties
+    const doubleIt = computed(() => count.value * 2)
+
+    //return all 
+    return {
+        count, doubleIt, increment, decrement
+    }
+
+
+})
+<script setup>
+import { useCounterStore } from "./stores/counter.js";
+const counterStore = useCounterStore()
+</script>
+
+<template>
+ <h1>Counter App Using Pinia</h1>
+ <h3>Value : {{counterStore.count}} {{counterStore.doubleIt}}</h3>
+ <button @click="counterStore.increment">+</button>
+</template>
+
+<style scoped></style>
+
+Task:
+Convert API CALLS using composition Api
