@@ -1,92 +1,83 @@
 <template>
     <form @submit.prevent="submitForm">
-      <div>
-        <label for="username">Username</label>
-        <input v-model="form.username" id="username" name="username" @input="validateUsername" />
-        <span v-if="errors.username">{{ errors.username }}</span>
-      </div>
-  
-      <div>
-        <label for="email">Email</label>
-        <input v-model="form.email" id="email" name="email" type="email" @input="validateEmail" />
-        <span v-if="errors.email">{{ errors.email }}</span>
-      </div>
-  
-      <button type="submit" :disabled="!isValid">Submit</button>
+        <div>
+            <label for="username">Username</label>
+            <input v-model="username" id="username" name="username" @blur="validateUsername" />
+            <span>{{ errors.username }}</span>
+        </div>
+
+        <div>
+            <label for="email">Email</label>
+            <input v-model="email" id="email" name="email" type="email" @blur="validateEmail" />
+            <span>{{ errors.email }}</span>
+        </div>
+
+        <button type="submit" :disabled="!isValid">Submit</button>
     </form>
-  </template>
-  
-  <script setup>
-  import { reactive, computed } from 'vue';
-  
-  // Reactive state for form fields
-  const form = reactive({
-    username: '',
-    email: '',
-  });
-  
-  // Reactive state for errors
-  const errors = reactive({
-    username: '',
-    email: '',
-  });
-  
-  // Validation functions
-  const validateUsername = () => {
-    errors.username = form.username.length < 3 ? 'Username must be at least 3 characters long' : '';
-  };
-  
-  const validateEmail = () => {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    errors.email = !emailPattern.test(form.email) ? 'Invalid email address' : '';
-  };
-  
-  // Computed property to check if the form is valid
-  const isValid = computed(() => !errors.username && !errors.email);
-  
-  // Form submit handler
-  const submitForm = () => {
-    validateUsername();
-    validateEmail();
-    if (isValid.value) {
-      alert(`Form Submitted: ${JSON.stringify(form)}`);
-    }
-  };
-  </script>
-  
-  <style scoped>
-  form div {
+</template>
+
+<script setup>
+import { ref, reactive, computed } from 'vue';
+import { useField, useForm } from 'vee-validate';
+import * as yup from 'yup';
+
+// Define the validation schema
+const schema = yup.object({
+    username: yup.string().required('Username is required'),
+    email: yup.string().email('Email must be valid').required('Email is required'),
+});
+
+// Form state and validation
+const { handleSubmit, errors } = useForm({
+    validationSchema: schema,
+});
+
+//TextBox
+const { value: username, errorMessage: usernameError, validate: validateUsername } = useField('username');
+//Email 
+const { value: email, errorMessage: emailError, validate: validateEmail } = useField('email');
+
+const isValid = computed(() => !usernameError.value && !emailError.value);
+
+// Form submit handler
+const submitForm = handleSubmit(values => {
+    alert(`Form Submitted: ${JSON.stringify(values)}`);
+});
+</script>
+
+<style scoped>
+form div {
     margin-bottom: 10px;
-  }
-  
-  label {
+}
+
+label {
     display: block;
     margin-bottom: 5px;
-  }
-  
-  input {
+}
+
+input {
     display: block;
     padding: 8px;
     width: 100%;
     margin-bottom: 5px;
-  }
-  
-  span {
+}
+
+span {
     color: red;
-  }
-  
-  button {
+}
+
+button {
     padding: 10px 15px;
     background-color: blue;
     color: white;
     border: none;
     cursor: pointer;
     transition: background-color 0.3s;
-  }
-  
-  button:disabled {
+}
+
+button:disabled {
     background-color: gray;
     cursor: not-allowed;
-  }
-  </style>
-  
+}
+</style>
+
