@@ -5758,7 +5758,7 @@ https://vueuse.org/
 
 You can thrid party composable utilities in this web site.
 ...................................................................................
-				Watchers
+				                 Watchers
 ...................................................................................
 
 What is Watcher?
@@ -7050,3 +7050,454 @@ const counterStore = useCounterStore()
 
 Task:
 Convert API CALLS using composition Api
+................................................................................
+									SPA - Single Page Web Application
+.................................................................................
+SPA is type of web application built for browsers, which was introduced in 2017 as part of HTML 5 spec.
+SPA is called client routing.
+
+SPA core features:
+1.All navigation is controlled inside browser only.
+2.From the server we get only data via apis as json format
+3.In SPA , Only we have one physical page index.html
+4.Rest of the application page are called "virtual pages" which are created by js dynamically we call "components"
+5.Navigation is controlled by js objects called "location and history" objects
+
+Routing can be implemented using plain js,html 5,ajax, css3 itself , in large scale we need framework which is called "Vue Router"
+
+Vue Router is framework which is supplied as plugin.
+
+Setup project with router is included
+
+project structure
+
+App
+  |
+  src
+   |
+   components
+   stores
+   views
+   router
+ App.vue
+ main.js
+
+components
+views
+  both are going to hold components
+
+view is special component which is going act as place holder component 
+view component is going to display just page which can hold other components
+for eg. when we click product menu, we display product page, where product page is view component, inside product page we display product details.
+
+router
+  which has a file which configures menus and mapping view components
+
+...............................................................................
+					              URL Pattern in SPA
+..............................................................................
+
+Types of url
+1.static web url
+  http://www.example.com/products.html / products.pdf
+
+2.dynamic web url
+  htttp://www.example.com/product.aspx or produdct.php, or product.jsp
+
+3.Web service
+    htttp://www.example.com/api/products => json 
+
+4.SPA Web url
+   htttp://www.example.com/index.html#products
+      -hashbang notation
+   htttp://www.example.com/products
+      -webservice notation
+
+webservice notation is easy and preferable way of implementation.
+
+
+Steps:
+ router/index.js
+
+in order to create webservice notation: createWebHistory function is used
+in order to create hashbang notation : createWebHashHistory function is used
+
+
+import AboutView from "@/views/AboutView.vue";
+import HomeView from "@/views/HomeView.vue";
+import { createRouter, createWebHistory } from "vue-router";
+
+//it defines the menu (url) configuration against "View-page"
+const routes = [
+  {
+    path: '/',
+    name: 'home',
+    component: HomeView
+  },
+  {
+    path: '/about',
+    name: 'about',
+    component: AboutView
+  }
+]
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: routes
+})
+
+export default router;
+...............................................................................
+             Master Page/Landing page menu Configuration
+.............................................................................
+
+We have to  define hyper links.
+
+ App Component is root component or landing component which has master page details like links.
+
+Vue-Router offers lot of built in components
+
+1.RouterLink
+    Used to define link
+2.RouterView
+    It is place holder component to display page.
+
+src/App.vue
+<script setup>
+import { RouterLink, RouterView } from 'vue-router'
+</script>
+<template>
+  <header>
+    <h1>Site Header</h1>
+    <!-- Menu Bar -->
+    <nav>
+      <ul>
+        <li>
+          <RouterLink to="/">Home</RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/about">About</RouterLink>
+        </li>
+      </ul>
+
+    </nav>
+  </header>
+  <!-- Body section to display menu content -->
+  <RouterView></RouterView>
+  <footer>
+    <p>Footer</p>
+  </footer>
+</template>
+.................................................................................
+Adding Feature:
+
+Steps:
+1.you can add menu
+   <li>
+          <RouterLink to="/review">Review</RouterLink>
+        </li>
+2.Create View Component
+
+src/views/ReviewView.vue
+<script setup>
+</script>
+<template>
+  <h1>Home View</h1>
+</template>
+
+3.create application components 
+src/components/revies/Review.vue
+
+<script setup>
+</script>
+<template>
+  
+</template>
+
+4.Add  biz logic
+
+src/stores/counter.js
+import { ref, computed } from 'vue'
+import { defineStore } from 'pinia'
+
+export const useCounterStore = defineStore('counter', () => {
+  const count = ref(0)
+  const doubleCount = computed(() => count.value * 2)
+  function increment() {
+    count.value++
+  }
+
+  return { count, doubleCount, increment }
+})
+
+5.src/compoentes/reviews/Review.vue
+<script setup>
+import { useCounterStore } from './stores/counter'
+const counterStore = useCounterStore()
+</script>
+<template>
+    <div>
+        <h1>Review</h1>
+        <h1>Like {{ counterStore.count }}</h1>
+    </div>
+</template>
+
+6.Refer the Review Component inside ReviewView
+src/views/ReviewView.vue
+<script setup>
+import Review from './components/reviews/Review.vue'
+</script>
+<template>
+    <Review></Review>
+</template>
+
+3.configure with menu
+import AboutView from "@/views/AboutView.vue";
+import HomeView from "@/views/HomeView.vue";
+import ReviewView from "@/views/ReviewView.vue";
+import { createRouter, createWebHistory } from "vue-router";
+
+//it defines the menu (url) configuration against "View-page"
+const routes = [
+  {
+    path: '/',
+    name: 'home',
+    component: HomeView
+  },
+  {
+    path: '/about',
+    name: 'about',
+    component: AboutView
+  },
+  {
+    path: '/review',
+    name: 'review',
+    component: ReviewView
+  }
+]
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: routes
+})
+
+export default router;
+....................................................................
+
+Final Code:
+
+src/routes/index.js
+import AboutView from "@/views/AboutView.vue";
+import HomeView from "@/views/HomeView.vue";
+import ReviewView from "@/views/ReviewView.vue";
+import { createRouter, createWebHistory } from "vue-router";
+
+//it defines the menu (url) configuration against "View-page"
+const routes = [
+  {
+    path: '/',
+    name: 'home',
+    component: HomeView
+  },
+  {
+    path: '/about',
+    name: 'about',
+    component: AboutView
+  },
+  {
+    path: '/review',
+    name: 'review',
+    component: ReviewView
+  }
+]
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: routes
+})
+
+export default router;
+
+src/App.vue
+<script setup>
+import { RouterLink, RouterView } from 'vue-router'
+</script>
+<template>
+  <header>
+    <h1>Site Header</h1>
+    <!-- Menu Bar -->
+    <nav>
+      <ul>
+        <li>
+          <RouterLink to="/">Home</RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/about">About</RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/review">Review</RouterLink>
+        </li>
+      </ul>
+
+    </nav>
+  </header>
+  <!-- Body section to display menu content -->
+  <RouterView></RouterView>
+  <footer>
+    <p>Footer</p>
+  </footer>
+</template>
+
+src/views/ReviewView.vue
+<script setup>
+import Review from '@/components/reviews/Review.vue'
+
+</script>
+<template>
+    <Review></Review>
+</template>
+
+src/components/reivew/Review.vue
+<script setup>
+import { useCounterStore } from '@/stores/counter.js'
+const counterStore = useCounterStore()
+</script>
+<template>
+    <div>
+        <h1>Review</h1>
+        <h1>Like {{ counterStore.count }}</h1>
+        <button @click="counterStore.count++">+</button>
+    </div>
+</template>
+.................................................................................
+								  router,pinia,api call
+...............................................................................
+
+stores/posts.js
+import { defineStore } from "pinia";
+
+export const usePostsStore = defineStore('posts', {
+    state: () => {
+        return {
+            posts: [],
+            error: null
+        }
+    },
+    actions: {
+        //async 
+        async fetchPosts() {
+            try {
+                const response = await fetch('https://jsonplaceholder.typicode.com/posts')
+                const posts = await response.json()
+                this.posts = posts
+            }
+            catch (err) {
+                this.error = err
+                console.log(err)
+            }
+        }
+    },
+    getters: {
+        postList: state => state.posts
+    }
+
+})
+
+src/views/PostsView.vue
+<script setup>
+import Posts from '@/components/posts/Posts.vue'
+</script>
+<template>
+    <Posts></Posts>
+</template>
+
+src/components/posts/Posts.vue
+<script setup>
+import { onMounted } from 'vue'
+import { usePostsStore } from '@/stores/posts.js'
+
+const postsStore = usePostsStore()
+onMounted(() => {
+    postsStore.fetchPosts()
+})
+</script>
+<template>
+    <h1>Post App with Pinia-Router</h1>
+    <div v-for="post in postsStore.postList">
+        <h2>{{ post.title }}</h2>
+        <p>{{ post.body }}</p>
+    </div>
+</template>
+
+src/router/index.js
+import AboutView from "@/views/AboutView.vue";
+import HomeView from "@/views/HomeView.vue";
+import PostView from "@/views/PostView.vue";
+import ReviewView from "@/views/ReviewView.vue";
+
+import { createRouter, createWebHistory } from "vue-router";
+
+//it defines the menu (url) configuration against "View-page"
+const routes = [
+  {
+    path: '/',
+    name: 'home',
+    component: HomeView
+  },
+  {
+    path: '/about',
+    name: 'about',
+    component: AboutView
+  },
+  {
+    path: '/review',
+    name: 'review',
+    component: ReviewView
+  },
+  {
+    path: '/posts',
+    name: 'posts',
+    component: PostView
+  }
+]
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: routes
+})
+
+export default router;
+
+src/App.vue
+<script setup>
+import { RouterLink, RouterView } from 'vue-router'
+</script>
+<template>
+  <header>
+    <h1>Site Header</h1>
+    <!-- Menu Bar -->
+    <nav>
+      <ul>
+        <li>
+          <RouterLink to="/">Home</RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/about">About</RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/review">Review</RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/posts">Posts</RouterLink>
+        </li>
+      </ul>
+
+    </nav>
+  </header>
+  <!-- Body section to display menu content -->
+  <RouterView></RouterView>
+  <footer>
+    <p>Footer</p>
+  </footer>
+</template>
+.................................................................................
