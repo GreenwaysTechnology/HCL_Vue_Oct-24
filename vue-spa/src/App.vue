@@ -19,6 +19,10 @@ import { RouterLink, RouterView } from 'vue-router'
         <li>
           <RouterLink to="/posts">Posts</RouterLink>
         </li>
+        <li>
+          <RouterLink to="/dashboard">Go to Dashboard</RouterLink>
+        </li>
+
       </ul>
 
     </nav>

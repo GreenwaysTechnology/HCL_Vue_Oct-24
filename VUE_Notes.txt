@@ -7501,3 +7501,490 @@ import { RouterLink, RouterView } from 'vue-router'
   </footer>
 </template>
 .................................................................................
+								    URL Path Design 
+.................................................................................
+
+Static Path
+   {
+    path: '/about',
+    name: 'about',
+    component: AboutView
+  }
+
+dynamic path
+   {
+    path: '/details/:id',
+    name: 'details',
+    component: Details
+  }
+
+eg:
+src/App.vue
+<script setup>
+import { RouterLink, RouterView } from 'vue-router'
+</script>
+<template>
+  <header>
+   <div class="wrapper">
+      <nav>
+        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/users">Users</RouterLink>
+
+      </nav>
+    </div>
+  </header>
+  <RouterView />
+</template>
+
+<style scoped>
+header {
+  line-height: 1.5;
+  max-height: 100vh;
+}
+
+.logo {
+  display: block;
+  margin: 0 auto 2rem;
+}
+
+nav {
+  width: 100%;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+nav a.router-link-exact-active {
+  color: var(--color-text);
+}
+
+nav a.router-link-exact-active:hover {
+  background-color: transparent;
+}
+
+nav a {
+  display: inline-block;
+  padding: 0 1rem;
+  border-left: 1px solid var(--color-border);
+}
+
+nav a:first-of-type {
+  border: 0;
+}
+
+@media (min-width: 1024px) {
+  header {
+    display: flex;
+    place-items: center;
+    padding-right: calc(var(--section-gap) / 2);
+  }
+
+  .logo {
+    margin: 0 2rem 0 0;
+  }
+
+  header .wrapper {
+    display: flex;
+    place-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  nav {
+    text-align: left;
+    margin-left: -1rem;
+    font-size: 1rem;
+
+    padding: 1rem 0;
+    margin-top: 1rem;
+  }
+}
+</style>
+
+src/UserList.vue
+<script setup>
+import { reactive } from 'vue';
+import { RouterLink } from 'vue-router'
+
+const USERS = [
+    { id: 12, name: 'Dr. Nice' },
+    { id: 13, name: 'Bombasto' },
+    { id: 14, name: 'Celeritas' },
+    { id: 15, name: 'Magneta' },
+    { id: 16, name: 'RubberMan' },
+    { id: 17, name: 'Dynama' },
+    { id: 18, name: 'Dr. IQ' },
+    { id: 19, name: 'Magma' },
+    { id: 20, name: 'Tornado' }
+];
+const users = reactive(USERS)
+</script>
+<template>
+    <h1>UsersList</h1>
+    <ul>
+        <li v-for="user of users">
+            <RouterLink :to="'/details/' + user.id">
+                <span>{{ user.name }}</span>
+            </RouterLink>
+        </li>
+    </ul>
+</template>
+
+src/views/UsersView.vue
+<script setup>
+import UserList from '@/components/UserList.vue'
+
+</script>
+<template>
+    <UserList></UserList>
+</template>
+
+src/views/UsersDetailsView.vue
+
+<script setup>
+import { useRoute } from 'vue-router'
+import { onMounted } from 'vue'
+const route = useRoute()
+onMounted(() => {
+    console.log(route.params)
+    //here you can make api call based on parameter
+})
+</script>
+<template>
+    <h1>{{$route.params.id }} Users details View</h1>
+
+</template>
+...............................................................................
+										Named Routes
+
+
+Without Named routes
+
+const routes = [
+ {
+   path:'/details/:id',
+   component:UserDetails
+ }
+]
+  <RouterLink  :to="'/details/'+ user.id">
+                <span>{{user.name}}</span>
+  </RouterLink>
+
+Here we have to refer the whole path, instead we can simply using names
+
+const routes = [
+ {
+   path:'/details/:id',
+   name:'details',
+   component:UserDetails
+ }
+]
+
+ <RouterLink :to="{name:'details',params:{id:user.id} }">
+                <span>{{user.name}}</span>
+   </RouterLink>
+eg:
+<script setup>
+import { reactive } from 'vue';
+import { RouterLink } from 'vue-router'
+
+const USERS = [
+    { id: 12, name: 'Dr. Nice' },
+    { id: 13, name: 'Bombasto' },
+    { id: 14, name: 'Celeritas' },
+    { id: 15, name: 'Magneta' },
+    { id: 16, name: 'RubberMan' },
+    { id: 17, name: 'Dynama' },
+    { id: 18, name: 'Dr. IQ' },
+    { id: 19, name: 'Magma' },
+    { id: 20, name: 'Tornado' }
+];
+const users = reactive(USERS)
+</script>
+<template>
+    <h1>UsersList</h1>
+    <ul>
+        <li v-for="user of users">
+            <!-- <RouterLink :to="'/details/' + user.id">
+                <span>{{ user.name }}</span>
+            </RouterLink> -->
+            <!-- With Named Routing -->
+            <RouterLink :to="{ name: 'details', params: { id: user.id } }">
+                <span>{{ user.name }}</span>
+            </RouterLink>
+        </li>
+    </ul>
+</template>
+
+....................................................................................................................................
+										Nested Routers
+....................................................................................................................................
+Building Sub menus;
+
+Movie
+
+ Sci
+ Adv
+ drama
+
+Route Configuration
+{
+      path: '/movies',
+      name: 'movies',
+      component: () =>MoviesView.vue,
+      children: [
+        {
+          path: 'action',
+          component: () => import('../views/ActionView.vue'),
+        },
+        {
+          path: 'drama',
+          component: () => import('../views/DramaView.vue'),
+        },
+        {
+          path: 'horror',
+          component: () => import('../views/HorrorView.vue'),
+        }
+      ]
+    }
+
+eg:
+
+src/routes/index.js
+
+import { createRouter, createWebHistory } from 'vue-router'
+import HomeView from '../views/HomeView.vue'
+import UsersView from '@/views/UsersView.vue'
+import UsersDetailsView from '@/views/UsersDetailsView.vue'
+import MoviesView from '@/views/MoviesView.vue'
+import ActionView from '@/views/ActionView.vue'
+import DramaView from '@/views/DramaView.vue'
+import HorrorView from '@/views/HorrorView.vue'
+
+const routes = [
+  {
+    path: '/',
+    name: 'home',
+    component: HomeView,
+  },
+  {
+    path: '/users',
+    name: 'users',
+    component: UsersView
+  },
+  {
+    path: '/details/:id',
+    name: 'details',
+    component: UsersDetailsView
+  },
+  {
+    path: '/movies',
+    name: 'movies',
+    component: MoviesView,
+    children: [
+      {
+        path: 'action',
+        component: ActionView
+      },
+      {
+        path: 'drama',
+        component: DramaView,
+      },
+      {
+        path: 'horror',
+        component: HorrorView
+      }
+    ]
+  }
+]
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: routes
+})
+
+export default router
+
+Components:
+..........
+App.vue
+<script setup>
+import { RouterLink, RouterView } from 'vue-router'
+</script>
+<template>
+  <header>
+   <div>
+      <nav>
+        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/users">Users</RouterLink>
+        <RouterLink to="/movies">Movies</RouterLink>
+
+      </nav>
+    </div>
+  </header>
+  <RouterView />
+</template>
+
+<style scoped>
+header {
+  line-height: 1.5;
+  max-height: 100vh;
+}
+
+.logo {
+  display: block;
+  margin: 0 auto 2rem;
+}
+
+nav {
+  width: 100%;
+  font-size: 12px;
+  margin-top: 2rem;
+}
+
+nav a.router-link-exact-active {
+  color: var(--color-text);
+}
+
+nav a.router-link-exact-active:hover {
+  background-color: transparent;
+}
+
+nav a {
+  display: inline-block;
+  padding: 0 1rem;
+  border-left: 1px solid var(--color-border);
+}
+
+nav a:first-of-type {
+  border: 0;
+}
+
+@media (min-width: 1024px) {
+  header {
+    display: flex;
+    place-items: center;
+    padding-right: calc(var(--section-gap) / 2);
+  }
+
+  .logo {
+    margin: 0 2rem 0 0;
+  }
+
+  header .wrapper {
+    display: flex;
+    place-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  nav {
+    text-align: left;
+    margin-left: -1rem;
+    font-size: 1rem;
+
+    padding: 1rem 0;
+    margin-top: 1rem;
+  }
+}
+</style>
+
+src/views/MovieView.vue
+<script setup>
+import { RouterLink, RouterView } from 'vue-router'
+</script>
+<template>
+    <h1>Movies Page</h1>
+    <ul>
+        <li>
+            <RouterLink to="/movies/action">
+                <span>Action</span>
+            </RouterLink>
+        </li>
+        <li>
+            <RouterLink to="/movies/drama">
+                <span>Drama</span>
+            </RouterLink>
+        </li>
+        <li>
+            <RouterLink to="/movies/horror">
+                <span>Horror</span>
+            </RouterLink>
+        </li>
+    </ul>
+    <RouterView />
+
+</template>
+
+src/views/ActionView.vue
+<script setup>
+
+</script>
+<template>
+    <h1>Action Movies Page</h1>
+</template>
+Note: add all other views
+................................................................................
+									Programmetic Navigation
+................................................................................
+Using  Router Object we can navigate to Views
+
+src/views/MoviesReview.vue
+<script setup>
+import { RouterLink, RouterView, useRouter } from 'vue-router'
+const router = useRouter()
+const goToReview = () => {
+    router.push({ path: 'review' })
+}
+</script>
+<template>
+    <h1>Movies Page</h1>
+    <ul>
+        <li>
+            <RouterLink to="/movies/action">
+                <span>Action</span>
+            </RouterLink>
+        </li>
+        <li>
+            <RouterLink to="/movies/drama">
+                <span>Drama</span>
+            </RouterLink>
+        </li>
+        <li>
+            <RouterLink to="/movies/horror">
+                <span>Horror</span>
+            </RouterLink>
+        </li>
+    </ul>
+    <RouterView />
+    <button @click="goToReview">GoTo Review</button>
+</template>
+........................................................................................
+									Lazy loading
+........................................................................................
+
+When building spa apps with bunlder like webpacks, rollup..how to enable lazy loading
+
+How to implement lazy loading?
+
+  {
+    path: '/users',
+    name: 'users',
+    component: import('../views/UsersView.vue')
+  },
+
+.....................................................................................				 Redirections
+
+.....................................................................................				 Redirections
+
+  {
+      path: '/',
+      redirect: { name: 'home' }
+    },
+    {
+      path: '/home',
+      name: 'home',
+      component: HomeView
+    },
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+ 
