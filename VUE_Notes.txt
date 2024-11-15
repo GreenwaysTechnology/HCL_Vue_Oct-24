@@ -7984,7 +7984,344 @@ How to implement lazy loading?
       name: 'home',
       component: HomeView
     },
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////								 Authentication, Router-auth Guard
+..............................................................................................
+Authentication using jwt
+
+Steps:
+
+1.Setup server side 
+
+G:\HCL>mkdir authserver
+
+G:\HCL>cd authserver
+G:\HCL\authserver>npm init --yes
+Wrote to G:\HCL\authserver\package.json:
+
+{
+  "name": "authserver",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
+
+dependencies
+npm install express body-parser cors jsonwebtoken
+npm i bcryptjs
+
+G:\HCL\authserver>mkdir src
+
+
+src/app.js
+const express = require('express')
+const jwt = require('jsonwebtoken')
+const byrypt = require('bcryptjs')
+const bodyParser = require('body-parser')
+const cors = require('cors')
+
+const app = express()
+app.use(cors())
+app.use(bodyParser.json())
+
+const SECRET_KEY = "your_jwt_secret_key"
+
+//dummy user data : this may come from database
+const users = [{
+    id: 1,
+    username: 'admin',
+    password: byrypt.hashSync('admin', 8) //store hashed passwords
+}]
+
+//login route
+app.post('/login', (req, res) => {
+    //get username and password from the vue
+    const { username, password } = req.body
+    //find the user the is available in database or not
+    const user = users.find(u => u.username === username);
+    if (!user) {
+        return res.status(404).send('User not found')
+    }
+
+    //check password
+    const passwordIsVaild = byrypt.compareSync(password, user.password)
+    if (!passwordIsVaild) {
+        return res.status(401).send({ auth: false, token: null })
+    }
+    //create jwt token for that user and send back to vue(ui)
+    const token = jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: '1hr' })
+    res.status(200).send({ auth: true, token: token })
+
+})
+//middleware to attach token for a route
+function verifyToken(req, res, next) {
+    const token = req.headers['x-access-token']
+    if (!token) {
+        return res.status(403).send({ auth: false, message: 'No Token Provided' })
+    }
+    jwt.verify(token, SECRET_KEY, (err, decoded) => {
+        if (err) {
+            return res.status(403).send({ auth: false, message: 'Failed to authentication' })
+        }
+        req.userId = decoded.id;
+        next();
+    })
+}
+
+app.get('/dashboard', verifyToken, (req, res) => {
+    res.status(200).send('Hello, This is protected route')
+})
+
+app.listen(3000, () => {
+    console.log('Auth Server is Running')
+});
+
+Testing:
+
+node src/app.js
+
+Using postman or curl
+
+POST localhost:3000/login
+{
+    "username": "admin",
+    "password": "admin"
+}
+
+Response:
+{
+    "auth": true,
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzMxNjM2MjU3LCJleHAiOjE3MzE2Mzk4NTd9.p0JTBBOOy3OgVVBKJ9MSfbLEu7F1HeaNbdJ5sC15WLw"
+}
+...........................................................................................
+									Vue js and Authentication
+
+G:\HCL>npm init vue@latest
+
+> npx
+> create-vue
+
+
+Vue.js - The Progressive JavaScript Framework
+
+√ Project name: ... vue-auth
+√ Add TypeScript? ... No / Yes
+√ Add JSX Support? ... No / Yes
+√ Add Vue Router for Single Page Application development? ... No / Yes
+√ Add Pinia for state management? ... No / Yes
+√ Add Vitest for Unit Testing? ... No / Yes
+√ Add an End-to-End Testing Solution? » No
+√ Add ESLint for code quality? » No
+
+Scaffolding project in G:\HCL\vue-auth...
+
+Done. Now run:
+
+  cd vue-auth
+  npm install
+  npm run dev
+
+
+G:\HCL>cd vue-auth
+
+G:\HCL\vue-auth>npm install
+
+added 143 packages, and audited 144 packages in 24s
+
+38 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+G:\HCL\vue-auth>
+
+
+src/util/auth.js
+const API_URL = 'http://localhost:3000';
+
+export const auth = {
+    async login(username, password) {
+        const response = await fetch(`${API_URL}/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+      });
+
+        const data = await response.json();
+
+        if (response.ok && data.token) {
+            localStorage.setItem('user-token', data.token); // Store the token in localStorage
+        } else {
+            throw new Error(data.message || 'Login failed');
+        }
+
+        return data;
+    },
+
+    logout() {
+        localStorage.removeItem('user-token');
+    },
+
+    getToken() {
+        return localStorage.getItem('user-token');
+    },
+
+    isAuthenticated() {
+        return !!this.getToken();
+    },
+
+    async fetchWithAuth(url, options = {}) {
+        const token = this.getToken();
+
+        // Add Authorization header if token exists
+        const headers = {
+            ...options.headers,
+            ...(token ? { 'x-access-token': token } : {})
+        };
+
+        const response = await fetch(url, {
+            ...options,
+            headers
+        });
+
+        // Handle the response
+        if (!response.ok) {
+            throw new Error('Unauthorized or failed request');
+        }
+
+        return response.json();
+    },
+    async fetchProtectedData() {
+        try {
+            const data = await auth.fetchWithAuth('http://localhost:3000/dashboard');
+            console.log(data);
+        } catch (error) {
+            console.error('Error fetching protected data:', error);
+        }
+    }
+
+};
+
+The above code can be moved to composables or pinia -Task for your.
+
+..........................................................................................
+
+src/routers/index.js
+import { createRouter, createWebHistory } from 'vue-router'
+import HomeView from '@/views/HomeView.vue'
+import Login from '@/components/Login.vue';
+import Dashboard from '@/components/Dashboard.vue';
+import { auth } from '@/composables/auth.js';
+
+
+const routes = [
+  { path: '/', name: 'Home', component: HomeView },
+  { path: '/login', name: 'Login', component: Login },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: Dashboard,
+    meta: { requiresAuth: true }
+  }
+];
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth && !auth.isAuthenticated()) {
+    next({ name: 'Login' });
+  } else {
+    next();
+  }
+});
+export default router
+
+
+src/components/Login.vue
+<template>
+    <div>
+        <h1>Login</h1>
+        <input v-model="username" placeholder="Username" />
+        <input v-model="password" type="password" placeholder="Password" />
+        <button @click="login">Login</button>
+    </div>
+</template>
+
+<script>
+import { auth } from '@/composables/auth.js';
+import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+
+export default {
+    setup() {
+        const router = useRouter();
+        const username = ref('');
+        const password = ref('');
+
+        const login = async () => {
+            try {
+                await auth.login(username.value, password.value);
+                router.push({ name: 'Dashboard' }); // Redirect after login
+            } catch (error) {
+                alert(error.message || 'Invalid credentials');
+            }
+        };
+
+        return { username, password, login };
+    }
+};
+</script>
+
+src/components/Dashboard.vue
+
+<template>
+    <div>
+      <h1>Dashboard</h1>
+      <button @click="logout">Logout</button>
+    </div>
+  </template>
+  
+  <script>
+import { auth } from '@/composables/auth.js';
+import { useRouter } from 'vue-router';
+  
+  export default {
+    setup() {
+      const router = useRouter();
+  
+      const logout = () => {
+        auth.logout();
+        router.push({ name: 'Home' }); // Redirect after logout
+      };
+  
+      return { logout };
+    }
+  };
+  </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
  
